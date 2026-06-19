@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './TitanPortal.css';
 
-export default function TitanPortal() {
+export default function TitanPortal({ onLoginSuccess }) {
   // 'student-login', 'student-register', or 'teacher-login'
   const [view, setView] = useState('student-login');
   
@@ -12,7 +12,6 @@ export default function TitanPortal() {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
-  // Jab view change ho toh form fields auto-clear ho jayein
   const handleViewChange = (newView) => {
     setView(newView);
     setCnic('');
@@ -24,18 +23,34 @@ export default function TitanPortal() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(`Submitting form for ${view}`, { cnic, email, dob, password });
-    alert(`Form submitted for ${view}! Check console for details.`);
+
+    if (view === 'teacher-login') {
+      // Trainer Authentication Check
+      if (email === 'drhasnain953@gmail.com' && password === '2008hasanin') {
+        onLoginSuccess('trainer', { name: "Dr. Hasnain", email: email });
+      } else {
+        alert("Invalid Trainer Email or Password!");
+      }
+    } else if (view === 'student-login') {
+      // Student Login Check
+      if (cnic.trim() !== '' && password.trim() !== '') {
+        onLoginSuccess('student', { name: "Portal Student", cnic: cnic });
+      } else {
+        alert("Please enter valid CNIC and Password!");
+      }
+    } else if (view === 'student-register') {
+      alert("Password created successfully! Kindly switch to Login tab.");
+      handleViewChange('student-login');
+    }
   };
 
   return (
     <div className="titan-container">
       {/* Branding Header */}
       <div className="titan-header">
-        {/* Yahan aapka image logo add ho gaya hai */}
         <div className="titan-logo-container">
           <img 
-            src="https://i.ibb.co/YFxWpq9f/titan-logo.jpg" 
+            src="https://i.ibb.co/q3c3CkLS/titan-logo.jpg" 
             alt="TITAN Logo" 
             className="titan-logo-img" 
           />
@@ -49,16 +64,18 @@ export default function TitanPortal() {
       {/* Main Card */}
       <div className="titan-card">
         
-        {/* Student Navigation Tabs (Only shows if not in Teacher view) */}
+        {/* Student Navigation Tabs */}
         {view !== 'teacher-login' && (
           <div className="titan-tabs">
             <button 
+              type="button"
               className={`tab-btn ${view === 'student-login' ? 'active' : ''}`}
               onClick={() => handleViewChange('student-login')}
             >
               Login
             </button>
             <button 
+              type="button"
               className={`tab-btn ${view === 'student-register' ? 'active' : ''}`}
               onClick={() => handleViewChange('student-register')}
             >
@@ -81,6 +98,7 @@ export default function TitanPortal() {
                 <label>CNIC *</label>
                 <input 
                   type="text" 
+                  placeholder="Enter CNIC number"
                   value={cnic} 
                   onChange={(e) => setCnic(e.target.value)} 
                   required 
@@ -100,6 +118,7 @@ export default function TitanPortal() {
                 <label>CNIC *</label>
                 <input 
                   type="text" 
+                  placeholder="Enter CNIC number"
                   value={cnic} 
                   onChange={(e) => setCnic(e.target.value)} 
                   required 
@@ -129,6 +148,7 @@ export default function TitanPortal() {
                 <label>Email *</label>
                 <input 
                   type="email" 
+                  placeholder="trainer@example.com"
                   value={email} 
                   onChange={(e) => setEmail(e.target.value)} 
                   required 
@@ -137,22 +157,23 @@ export default function TitanPortal() {
             </>
           )}
 
-          {/* Password Input (Shared across all views) */}
+          {/* Password Input */}
           <div className="input-group password-group">
             <label>Password *</label>
             <div className="password-wrapper">
               <input 
                 type={showPassword ? "text" : "password"} 
+                placeholder="Enter password"
                 value={password} 
                 onChange={(e) => setPassword(e.target.value)} 
                 required 
               />
               <button 
                 type="button" 
-                className="toggle-password"
+                className="toggle-password-text"
                 onClick={() => setShowPassword(!showPassword)}
               >
-                {showPassword ? '👁️' : '👁️‍🗨️'}
+                {showPassword ? 'Hide' : 'Show'}
               </button>
             </div>
           </div>
@@ -168,10 +189,11 @@ export default function TitanPortal() {
         </form>
       </div>
 
-      {/* Dynamic Portal Switcher Footer */}
+      {/* Switching Button Area */}
       <div className="portal-switcher-box">
         {view === 'teacher-login' ? (
           <button 
+            type="button"
             className="switch-portal-btn"
             onClick={() => handleViewChange('student-login')}
           >
@@ -179,6 +201,7 @@ export default function TitanPortal() {
           </button>
         ) : (
           <button 
+            type="button"
             className="switch-portal-btn"
             onClick={() => handleViewChange('teacher-login')}
           >
