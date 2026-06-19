@@ -1,0 +1,296 @@
+:root {
+  --primary-blue: #32458d;
+  --primary-blue-hover: #26356f; /* Hover ke liye dark shade */
+  --bg-light: #f8f9fa;
+  --text-muted: #6c757d;
+  --border-color: #e2e8f0;
+  --input-focus: #e0e7ff;
+  
+  /* Global transition timing rules */
+  --transition-fast: all 0.2s ease-in-out;
+  --transition-normal: all 0.3s ease-in-out;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #ffffff;
+  margin: 0;
+  padding: 0;
+}
+
+.titan-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 20px;
+  background-color: #ffffff;
+}
+
+/* Header Styling */
+.titan-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.titan-logo-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.logo-icon {
+  font-size: 2rem;
+}
+
+.logo-text {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--primary-blue);
+  letter-spacing: 1px;
+}
+
+.titan-fullname {
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin: 2px 0 15px 0;
+}
+
+.titan-portal-title {
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+/* Card Container */
+.titan-card {
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  width: 100%;
+  max-width: 440px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  overflow: hidden;
+  box-sizing: border-box;
+  /* Card appear hone ki smooth transition */
+  transition: var(--transition-normal); 
+}
+
+.titan-card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+/* Tab Toggle Styling */
+.titan-tabs {
+  display: flex;
+  background-color: #f1f3f5;
+  padding: 6px;
+  margin: 20px 20px 0 20px;
+  border-radius: 8px;
+}
+
+.tab-btn {
+  flex: 1;
+  background: none;
+  border: none;
+  padding: 10px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-radius: 6px;
+  /* Smooth color switch transition */
+  transition: var(--transition-fast);
+}
+
+.tab-btn:hover {
+  color: #1a1a1a;
+}
+
+.tab-btn.active {
+  background-color: #ffffff;
+  color: #000000;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+/* Form Styling */
+.titan-form {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+.titan-form h3 {
+  margin: 0 0 8px 0;
+  font-size: 1.25rem;
+  color: #111111;
+}
+
+.form-instruction {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+  margin: 0 0 20px 0;
+}
+
+/* Input Fields */
+.input-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+}
+
+.input-group label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-bottom: 6px;
+  color: #1a1a1a;
+}
+
+.input-group input {
+  padding: 12px;
+  font-size: 0.95rem;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background-color: #edf2f9; 
+  color: #333;
+  outline: none;
+  /* Focus smooth karne ke liye border aur box-shadow transition */
+  transition: var(--transition-fast);
+}
+
+.input-group input[type="date"] {
+  background-color: #ffffff;
+}
+
+.input-group input:focus {
+  border-color: var(--primary-blue);
+  background-color: #ffffff; /* Focus par background thoda change hoga */
+  box-shadow: 0 0 0 3px var(--input-focus);
+}
+
+/* Password eye button positioning */
+.password-wrapper {
+  position: relative;
+  display: flex;
+}
+
+.password-wrapper input {
+  width: 100%;
+  padding-right: 40px;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1rem;
+  opacity: 0.6;
+  /* Eye icon opacity transition */
+  transition: var(--transition-fast);
+}
+
+.toggle-password:hover {
+  opacity: 1;
+}
+
+/* Submission Elements */
+.submit-btn {
+  background-color: var(--primary-blue);
+  color: #ffffff;
+  border: none;
+  padding: 14px;
+  font-size: 0.95rem;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 8px;
+  /* Click aur hover transition */
+  transition: var(--transition-fast);
+}
+
+.submit-btn:hover {
+  background-color: var(--primary-blue-hover);
+}
+
+.submit-btn:active {
+  transform: scale(0.98); /* Button click par chota sa click effect */
+}
+
+.forgot-password-link {
+  text-align: center;
+  color: #553cff;
+  font-size: 0.9rem;
+  margin-top: 15px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  margin-left: auto;
+  margin-right: auto;
+  /* Hover transition */
+  transition: var(--transition-fast);
+}
+
+.forgot-password-link:hover {
+  color: #3b20e6;
+  text-decoration: underline;
+}
+
+/* Alternative Footer Switcher Block */
+.portal-switcher-box {
+  width: 100%;
+  max-width: 440px;
+  margin-top: 16px;
+}
+
+.switch-portal-btn {
+  width: 100%;
+  background-color: #ffffff;
+  border: 1px solid var(--border-color);
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  color: #000000;
+  cursor: pointer;
+  /* Background scale aur border transition */
+  transition: var(--transition-fast);
+}
+
+.switch-portal-btn:hover {
+  background-color: var(--bg-light);
+  border-color: #cbd5e1;
+}
+
+.switch-portal-btn:active {
+  transform: scale(0.99);
+}
+
+.titan-logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.titan-logo-img {
+  max-width: 120px; 
+  height: auto;
+  border-radius: 8px; 
+  object-fit: contain;
+  /* Logo transition (agar hover par effects chahiyen) */
+  transition: var(--transition-normal);
+}
+
+.titan-logo-img:hover {
+  transform: scale(1.03); /* Thoda sa zoom effect */
+}
