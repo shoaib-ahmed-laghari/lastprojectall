@@ -98,9 +98,10 @@ export default function TitanPortal({ onLoginSuccess }) {
                 <label>CNIC *</label>
                 <input 
                   type="text" 
+                  inputMode="numeric"
                   placeholder="Enter CNIC number"
                   value={cnic} 
-                  onChange={(e) => setCnic(e.target.value)} 
+                  onChange={(e) => setCnic(e.target.value.replace(/[^0-9]/g, ''))} 
                   required 
                 />
               </div>
@@ -118,9 +119,10 @@ export default function TitanPortal({ onLoginSuccess }) {
                 <label>CNIC *</label>
                 <input 
                   type="text" 
+                  inputMode="numeric"
                   placeholder="Enter CNIC number"
                   value={cnic} 
-                  onChange={(e) => setCnic(e.target.value)} 
+                  onChange={(e) => setCnic(e.target.value.replace(/[^0-9]/g, ''))} 
                   required 
                 />
               </div>
