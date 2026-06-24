@@ -30,12 +30,32 @@ const Dashboard = () => {
   const [attendanceView, setAttendanceView] = useState('overall');
   const [attCourseDropdownOpen, setAttCourseDropdownOpen] = useState(false);
 
+  // Course-level attendance date picker state
+  const [courseAttendanceDate, setCourseAttendanceDate] = useState('2026-06-17');
+
+  // Gender-section course navigation (Male / Female) + search within a section
+  const [genderSection, setGenderSection] = useState(null); // null | 'Male' | 'Female'
+  const [courseSearchQuery, setCourseSearchQuery] = useState('');
+
+  // Editable trainer profile state
+  const [isEditingProfile, setIsEditingProfile] = useState(false);
+  const [trainerProfile, setTrainerProfile] = useState({
+    name: 'Sir Yasir Ali (SUK)',
+    email: 'yasirlashari131@gmail.com',
+    employeeId: '15353',
+    hourlyRate: '2500/hr',
+    phone: '03033742231'
+  });
+  const [profileDraft, setProfileDraft] = useState(trainerProfile);
+
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
   const goTo = (menu) => {
     setCurrentMenu(menu);
     setSelectedCourse(null);
     setSelectedStudent(null);
+    setGenderSection(null);
+    setCourseSearchQuery('');
     setIsSidebarOpen(false);
     setProfileMenuOpen(false);
   };
@@ -44,8 +64,124 @@ const Dashboard = () => {
     setIsLoggedIn(false);
     setIsSidebarOpen(false);
     setSelectedCourse(null);
+    setGenderSection(null);
+    setCourseSearchQuery('');
     setCurrentMenu('dashboard');
     setProfileMenuOpen(false);
+  };
+
+  const startEditingProfile = () => {
+    setProfileDraft(trainerProfile);
+    setIsEditingProfile(true);
+  };
+
+  const saveProfileEdits = () => {
+    setTrainerProfile(profileDraft);
+    setIsEditingProfile(false);
+  };
+
+  const cancelEditingProfile = () => {
+    setProfileDraft(trainerProfile);
+    setIsEditingProfile(false);
+  };
+
+  // Draw + download the trainer ID card as a PNG (no external image embedding, avoids canvas CORS issues)
+  const downloadTrainerCard = () => {
+    const canvas = document.createElement('canvas');
+    canvas.width = 700;
+    canvas.height = 420;
+    const ctx = canvas.getContext('2d');
+
+    const drawRoundedRect = (x, y, w, h, r) => {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.arcTo(x + w, y, x + w, y + h, r);
+      ctx.arcTo(x + w, y + h, x, y + h, r);
+      ctx.arcTo(x, y + h, x, y, r);
+      ctx.arcTo(x, y, x + w, y, r);
+      ctx.closePath();
+    };
+
+    // Outer gradient background
+    const grad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+    grad.addColorStop(0, '#1e40af');
+    grad.addColorStop(1, '#4338ca');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // White inner card
+    ctx.fillStyle = '#ffffff';
+    drawRoundedRect(30, 30, 640, 360, 16);
+    ctx.fill();
+
+    // Avatar circle with initials
+    const initials = trainerProfile.name
+      .replace(/\(.*?\)/g, '')
+      .trim()
+      .split(' ')
+      .filter(Boolean)
+      .slice(0, 2)
+      .map(w => w[0])
+      .join('')
+      .toUpperCase();
+    ctx.beginPath();
+    ctx.arc(115, 130, 50, 0, Math.PI * 2);
+    ctx.fillStyle = '#1e40af';
+    ctx.fill();
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 32px Arial, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(initials, 115, 134);
+
+    // Name
+    ctx.fillStyle = '#111111';
+    ctx.font = 'bold 24px Arial, sans-serif';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'alphabetic';
+    ctx.fillText(trainerProfile.name, 190, 112);
+
+    // Role badge
+    ctx.fillStyle = '#eff6ff';
+    drawRoundedRect(190, 124, 78, 26, 6);
+    ctx.fill();
+    ctx.fillStyle = '#1e40af';
+    ctx.font = 'bold 13px Arial, sans-serif';
+    ctx.fillText('Trainer', 203, 142);
+
+    // Divider
+    ctx.strokeStyle = '#eaeaea';
+    ctx.beginPath();
+    ctx.moveTo(60, 210);
+    ctx.lineTo(640, 210);
+    ctx.stroke();
+
+    // Detail rows
+    const details = [
+      ['Email', trainerProfile.email],
+      ['Employee ID', trainerProfile.employeeId],
+      ['Hourly Rate', trainerProfile.hourlyRate],
+      ['Phone', trainerProfile.phone]
+    ];
+    let y = 245;
+    details.forEach(([label, value]) => {
+      ctx.fillStyle = '#666666';
+      ctx.font = '13px Arial, sans-serif';
+      ctx.fillText(label, 60, y);
+      ctx.fillStyle = '#111111';
+      ctx.font = 'bold 14px Arial, sans-serif';
+      ctx.fillText(String(value), 230, y);
+      y += 34;
+    });
+
+    ctx.fillStyle = '#9ca3af';
+    ctx.font = '11px Arial, sans-serif';
+    ctx.fillText('TITAN — Taj Institute of Technology and Applied Networks', 60, 372);
+
+    const link = document.createElement('a');
+    link.download = `${trainerProfile.name.replace(/[^a-zA-Z0-9]+/g, '_')}_TITAN_Card.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
   };
 
   const courses = [
@@ -85,6 +221,46 @@ const Dashboard = () => {
     ["Mon, Jun 15, 2026", "Present"], ["Wed, Jun 17, 2026", "Present"]
   ];
 
+  // Student assignments data
+  const studentAssignmentsLog = [
+    ["File managment vs dbms (theory)", "Fri, Jun 12, 2026", "Approved", "", null],
+    ["Galary_App_API_ASSIGNMENT", "Tue, Jun 2, 2026", "Approved", "", null],
+    ["React js Assignment Using Routing", "Thu, May 7, 2026", "Approved", "", null],
+    ["REACT JS ASSIGNMENT", "Wed, Apr 8, 2026", "Approved", "", null],
+    ["JAVASCRIPT DOM", "Sat, Mar 14, 2026", "Approved", "", null],
+    ["Web & App Hackathon", "Sat, Dec 27, 2025", "Approved", "", "Hackathon"],
+    ["java script assesment test", "Mon, Dec 1, 2025", "Not Submitted", "", null],
+    ["If else 8 questions java script", "Fri, Nov 28, 2025", "Approved", "", null],
+    ["Grand CSS Assignment oct 20", "Mon, Oct 27, 2025", "Approved", "", null],
+    ["Grid Assignment oct 10", "Mon, Oct 27, 2025", "Approved", "", null],
+    ["Animation and transition oct 8", "Mon, Oct 27, 2025", "Approved", "", null],
+    ["Portfolio Card Assignment oct 6", "Mon, Oct 27, 2025", "Approved", "", null],
+    ["Tribute page sep 24", "Mon, Oct 27, 2025", "Approved", "", null],
+    ["Class Assignment sep 14", "Mon, Oct 27, 2025", "Approved", "", null],
+    ["HTML Assignmwnt 3 sep", "Mon, Oct 27, 2025", "Approved", "very good work", null]
+  ];
+
+  // Student quizzes data
+  const studentQuizzesLog = [
+    ["Javascript (Quiz-4)", 33, 40, 1, "Mon, Jun 15, 2026"],
+    ["Javascript (Quiz-3)", 32, 40, 1, "Fri, May 22, 2026"],
+    ["Javascript (Quiz-2)", 32, 40, 1, "Fri, May 8, 2026"],
+    ["Javascript (Quiz-1)", 28, 40, 1, "Fri, May 8, 2026"],
+    ["HTML Quiz", 29, 40, 1, "Wed, Nov 12, 2025"],
+    ["CSS Quiz", 28, 40, 1, "Wed, Nov 12, 2025"]
+  ];
+
+  // Course-level attendance per-date record
+  const courseAttendanceByDate = [
+    ["382282", "Waqar Ali", "PRESENT"], ["463342", "Qaimudin Khuwaja", "NOT MARKED"],
+    ["464127", "Muhammad yaseen", "PRESENT"], ["465184", "Muhammad Masood", "PRESENT"],
+    ["465921", "Muhammad Bin Azam", "NOT MARKED"], ["466584", "Shoaib Ahmed", "PRESENT"],
+    ["466824", "Muhammad Hassan Memon", "PRESENT"], ["467551", "Shahbaz Ali", "PRESENT"],
+    ["467643", "Syed Hasnain Zaidi", "PRESENT"], ["467709", "M.Mujtaba khan", "PRESENT"],
+    ["467789", "Abdullah indhar", "PRESENT"], ["468384", "Faizan khan", "PRESENT"],
+    ["468491", "Tanveer", "PRESENT"], ["468526", "Alyan Mehmood Shah Syed", "PRESENT"]
+  ];
+
   const filteredStudents = studentsData.filter(student =>
     student.name.toLowerCase().includes(searchQuery.toLowerCase()) || student.code.includes(searchQuery)
   );
@@ -122,6 +298,31 @@ const Dashboard = () => {
   };
 
   const todayMarker = 17;
+
+  // Format the course-attendance date input value into a readable heading, e.g. "Wed Jun 17 2026"
+  const formatCourseAttendanceHeading = (isoDate) => {
+    const d = new Date(isoDate + "T00:00:00");
+    if (isNaN(d.getTime())) return isoDate;
+    const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    return `${days[d.getDay()]} ${monthNames[d.getMonth()].slice(0, 3)} ${d.getDate()} ${d.getFullYear()}`;
+  };
+
+  const courseAttPresentCount = courseAttendanceByDate.filter(r => r[2] === 'PRESENT').length;
+  const courseAttNotMarkedCount = courseAttendanceByDate.filter(r => r[2] === 'NOT MARKED').length;
+  const courseAttAbsentCount = Math.max(0, courseAttendanceByDate.length - courseAttPresentCount - courseAttNotMarkedCount);
+
+  // Gender-section aggregates for the two entry cards
+  const maleCourses = courses.filter(c => c.type.includes('Male'));
+  const femaleCourses = courses.filter(c => c.type.includes('Female'));
+  const maleEnrolledTotal = maleCourses.reduce((sum, c) => sum + c.enrolled, 0);
+  const femaleEnrolledTotal = femaleCourses.reduce((sum, c) => sum + c.enrolled, 0);
+
+  // Courses inside the currently opened gender section, filtered by search
+  const sectionCourses = (genderSection ? courses.filter(c => c.type.includes(genderSection)) : []).filter(c => {
+    const q = courseSearchQuery.toLowerCase();
+    if (!q) return true;
+    return c.title.toLowerCase().includes(q) || c.campus.toLowerCase().includes(q) || c.batch.toLowerCase().includes(q);
+  });
 
   // ============ LOGGED OUT -> SHOW ACTUAL TITAN PORTAL ============
   if (!isLoggedIn) {
@@ -198,7 +399,7 @@ const Dashboard = () => {
             <img src={SIR_YASIR_PHOTO} alt="Avatar" className="table-avatar-img" />
             {isSidebarOpen && (
               <div className="trainer-info">
-                <h4>Sir Yasir Ali (SUK)</h4>
+                <h4>{trainerProfile.name}</h4>
                 <p>Trainer</p>
               </div>
             )}
@@ -211,27 +412,57 @@ const Dashboard = () => {
 
         {currentMenu === 'profile' && (
           <div className="profile-page-wrapper animated-fade">
-            <div className="profile-cover-banner" style={{ backgroundImage: `url(${TITAN_LOGO_BG})` }}>
+            <div className="profile-cover-banner">
+              <img src={TITAN_LOGO_BG} alt="TITAN" className="profile-cover-logo-img" />
               <img src={SIR_YASIR_PHOTO} alt="Avatar" className="profile-cover-avatar" />
             </div>
             <div className="profile-identity-row">
               <div>
-                <h1>Sir Yasir Ali (SUK)</h1>
+                {isEditingProfile ? (
+                  <input
+                    type="text"
+                    className="profile-name-edit-input"
+                    value={profileDraft.name}
+                    onChange={(e) => setProfileDraft({ ...profileDraft, name: e.target.value })}
+                  />
+                ) : (
+                  <h1>{trainerProfile.name}</h1>
+                )}
                 <span className="role-pill-tag">Trainer</span>
               </div>
               <div className="profile-action-buttons">
-                <button className="btn-outline-action">Edit Profile</button>
-                <button className="btn-dark-action">Download Card</button>
+                {isEditingProfile ? (
+                  <>
+                    <button className="btn-outline-action" onClick={cancelEditingProfile}>Cancel</button>
+                    <button className="btn-dark-action" onClick={saveProfileEdits}>Save Changes</button>
+                  </>
+                ) : (
+                  <>
+                    <button className="btn-outline-action" onClick={startEditingProfile}>Edit Profile</button>
+                    <button className="btn-dark-action" onClick={downloadTrainerCard}>Download Card</button>
+                  </>
+                )}
               </div>
             </div>
 
             <div className="profile-grid-layout">
               <div className="profile-info-card">
                 <h3>Personal Information</h3>
-                <div className="info-row-item"><span className="info-label">Email</span><span className="info-value">yasirlashari131@gmail.com</span></div>
-                <div className="info-row-item"><span className="info-label">Employee ID</span><span className="info-value">15353</span></div>
-                <div className="info-row-item"><span className="info-label">Hourly Rate</span><span className="info-value">2500/hr</span></div>
-                <div className="info-row-item"><span className="info-label">Phone</span><span className="info-value">03033742231</span></div>
+                {isEditingProfile ? (
+                  <>
+                    <div className="info-row-item"><span className="info-label">Email</span><input className="info-edit-input" value={profileDraft.email} onChange={(e) => setProfileDraft({ ...profileDraft, email: e.target.value })} /></div>
+                    <div className="info-row-item"><span className="info-label">Employee ID</span><input className="info-edit-input" value={profileDraft.employeeId} onChange={(e) => setProfileDraft({ ...profileDraft, employeeId: e.target.value })} /></div>
+                    <div className="info-row-item"><span className="info-label">Hourly Rate</span><input className="info-edit-input" value={profileDraft.hourlyRate} onChange={(e) => setProfileDraft({ ...profileDraft, hourlyRate: e.target.value })} /></div>
+                    <div className="info-row-item"><span className="info-label">Phone</span><input className="info-edit-input" value={profileDraft.phone} onChange={(e) => setProfileDraft({ ...profileDraft, phone: e.target.value })} /></div>
+                  </>
+                ) : (
+                  <>
+                    <div className="info-row-item"><span className="info-label">Email</span><span className="info-value">{trainerProfile.email}</span></div>
+                    <div className="info-row-item"><span className="info-label">Employee ID</span><span className="info-value">{trainerProfile.employeeId}</span></div>
+                    <div className="info-row-item"><span className="info-label">Hourly Rate</span><span className="info-value">{trainerProfile.hourlyRate}</span></div>
+                    <div className="info-row-item"><span className="info-label">Phone</span><span className="info-value">{trainerProfile.phone}</span></div>
+                  </>
+                )}
               </div>
               <div className="profile-info-card">
                 <h3>Bio</h3>
@@ -407,43 +638,83 @@ const Dashboard = () => {
                   </div>
                 </section>
 
-                <div className="section-title-bar"><h3>Active Courses</h3></div>
-
-                <section className="courses-responsive-grid">
-                  {courses.map((course) => (
-                    <div key={course.id} className="course-clean-card" onClick={() => { setSelectedCourse(course); setActiveCourseTab('students'); setStudentsPage(1); }}>
-                      <div className="card-top-accent" style={{ backgroundColor: course.bgHeader }}>
-                        <div>
-                          <h4>{course.title}</h4>
-                          <span className="subtitle-tag">{course.type}</span>
+                {!genderSection ? (
+                  <>
+                    <div className="section-title-bar"><h3>Active Courses</h3></div>
+                    <section className="gender-section-grid">
+                      <div className="gender-section-card male-section-card" onClick={() => { setGenderSection('Male'); setCourseSearchQuery(''); }}>
+                        <div className="gender-section-icon-badge blue-icon">
+                          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="2"><circle cx="12" cy="7" r="4"/><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/></svg>
                         </div>
-                        <span className="batch-outline-pill">{course.batch}</span>
+                        <h3>Male Courses</h3>
+                        <p className="gender-section-meta">{maleCourses.length} active courses · {maleEnrolledTotal} students</p>
+                        <span className="gender-section-arrow">View courses →</span>
                       </div>
-                      <div className="card-body-content">
-                        <p className="location-text">{course.campus}</p>
-                        <div className="progress-container-box">
-                          <div className="flex-space-between text-small">
-                            <span>Progress</span>
-                            <span>{course.progress}% Completed</span>
-                          </div>
-                          <div className="progress-bar-rail">
-                            <div className="progress-bar-fill-track" style={{ width: `${course.progress}%`, backgroundColor: course.accentColor }}></div>
-                          </div>
+                      <div className="gender-section-card female-section-card" onClick={() => { setGenderSection('Female'); setCourseSearchQuery(''); }}>
+                        <div className="gender-section-icon-badge purple-icon">
+                          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#9333ea" strokeWidth="2"><circle cx="12" cy="7" r="4"/><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/></svg>
                         </div>
-                        <div className="meta-footer-info">
-                          <div>Enrolled: {course.enrolled} students</div>
-                          <div>Schedule: {course.schedule}</div>
-                          <div>Started On: {course.startedOn}</div>
-                        </div>
+                        <h3>Female Courses</h3>
+                        <p className="gender-section-meta">{femaleCourses.length} active courses · {femaleEnrolledTotal} students</p>
+                        <span className="gender-section-arrow">View courses →</span>
                       </div>
+                    </section>
+                  </>
+                ) : (
+                  <>
+                    <div className="breadcrumbs">
+                      <span className="breadcrumb-nav-link" onClick={() => { setGenderSection(null); setCourseSearchQuery(''); }}>Active Courses</span> &gt; <span className="current-crumb">{genderSection}</span>
                     </div>
-                  ))}
-                </section>
+                    <div className="section-title-bar gender-section-header-row">
+                      <h3>{genderSection} Courses</h3>
+                      <input
+                        type="text"
+                        className="table-search-input-box gender-course-search-box"
+                        placeholder="Search course, campus or batch..."
+                        value={courseSearchQuery}
+                        onChange={(e) => setCourseSearchQuery(e.target.value)}
+                      />
+                    </div>
+                    <section className="courses-responsive-grid">
+                      {sectionCourses.length === 0 && (
+                        <p className="muted-italic-text">No courses match your search.</p>
+                      )}
+                      {sectionCourses.map((course) => (
+                        <div key={course.id} className="course-clean-card" onClick={() => { setSelectedCourse(course); setActiveCourseTab('students'); setStudentsPage(1); }}>
+                          <div className="card-top-accent" style={{ backgroundColor: course.bgHeader }}>
+                            <div>
+                              <h4>{course.title}</h4>
+                              <span className="subtitle-tag">{course.type}</span>
+                            </div>
+                            <span className="batch-outline-pill">{course.batch}</span>
+                          </div>
+                          <div className="card-body-content">
+                            <p className="location-text">{course.campus}</p>
+                            <div className="progress-container-box">
+                              <div className="flex-space-between text-small">
+                                <span>Progress</span>
+                                <span>{course.progress}% Completed</span>
+                              </div>
+                              <div className="progress-bar-rail">
+                                <div className="progress-bar-fill-track" style={{ width: `${course.progress}%`, backgroundColor: course.accentColor }}></div>
+                              </div>
+                            </div>
+                            <div className="meta-footer-info">
+                              <div>Enrolled: {course.enrolled} students</div>
+                              <div>Schedule: {course.schedule}</div>
+                              <div>Started On: {course.startedOn}</div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </section>
+                  </>
+                )}
               </>
             ) : selectedStudent ? (
               <div className="expanded-course-workspace-card animated-fade">
                 <div className="breadcrumbs">
-                  <span className="breadcrumb-nav-link" onClick={() => { setSelectedCourse(null); setSelectedStudent(null); }}>Dashboard</span> &gt; <span className="breadcrumb-nav-link" onClick={() => setSelectedStudent(null)}>{selectedCourse.title}</span> &gt; <span className="current-crumb">{selectedStudent.name}</span>
+                  <span className="breadcrumb-nav-link" onClick={() => { setSelectedCourse(null); setSelectedStudent(null); setGenderSection(null); }}>Dashboard</span> &gt; <span className="breadcrumb-nav-link" onClick={() => setSelectedStudent(null)}>{selectedCourse.title}</span> &gt; <span className="current-crumb">{selectedStudent.name}</span>
                 </div>
 
                 <div className="tabs-header-navigation-bar">
@@ -452,49 +723,140 @@ const Dashboard = () => {
                   <button className={`nav-tab-item-btn ${studentTab === 'quizzes' ? 'tab-active' : ''}`} onClick={() => setStudentTab('quizzes')}>Quizzes</button>
                 </div>
 
-                {studentTab === 'attendance' && (
-                  <div className="tab-render-container">
-                    <section className="attendance-stat-cards-row student-stats-row">
-                      <div className="attendance-stat-card"><div><h3>90</h3><p>Total Classes</p></div><div className="stat-badge-icon blue-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2"/></svg></div></div>
-                      <div className="attendance-stat-card"><div><h3>59</h3><p>Present</p></div><div className="stat-badge-icon green-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2"><polyline points="20 6 9 17 4 12"/></svg></div></div>
-                      <div className="attendance-stat-card"><div><h3>5</h3><p>Leave</p></div><div className="stat-badge-icon amber-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#d97706" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/></svg></div></div>
-                      <div className="attendance-stat-card"><div><h3>26</h3><p>Absent</p></div><div className="stat-badge-icon red-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/></svg></div></div>
-                    </section>
+                {studentTab === 'attendance' && (() => {
+                  const totalClasses = 125, present = 111, leave = 5, absent = 9;
+                  const attPercent = Math.round((present / totalClasses) * 100);
+                  const isGood = attPercent >= 75;
+                  return (
+                    <div className="tab-render-container">
+                      <section className="attendance-stat-cards-row student-stats-row">
+                        <div className="attendance-stat-card"><div><h3>{totalClasses}</h3><p>Total Classes</p></div><div className="stat-badge-icon blue-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2"/></svg></div></div>
+                        <div className="attendance-stat-card"><div><h3>{present}</h3><p>Present</p></div><div className="stat-badge-icon green-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2"><polyline points="20 6 9 17 4 12"/></svg></div></div>
+                        <div className="attendance-stat-card"><div><h3>{leave}</h3><p>Leave</p></div><div className="stat-badge-icon amber-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#d97706" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/></svg></div></div>
+                        <div className="attendance-stat-card"><div><h3>{absent}</h3><p>Absent</p></div><div className="stat-badge-icon red-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/></svg></div></div>
+                      </section>
 
-                    <div className="attendance-overview-card">
-                      <h3>Attendance Overview</h3>
-                      <div className="overview-progress-rail"><div className="overview-progress-fill" style={{ width: '65%' }}></div></div>
-                      <p className="attendance-warning-text">Your attendance is below 75%. Please improve your attendance.</p>
-                    </div>
-
-                    <div className="attendance-month-table-card">
-                      <div className="attendance-month-header-row">
-                        <h3>Attendance: Jun 2026</h3>
-                        <select className="month-select-dropdown" defaultValue="Jun 2026"><option>Jun 2026</option></select>
+                      <div className="attendance-overview-card">
+                        <h3>Attendance Overview</h3>
+                        <div className="overview-progress-rail"><div className="overview-progress-fill" style={{ width: `${attPercent}%`, background: isGood ? '#10b981' : '#ef4444' }}></div></div>
+                        {isGood ? (
+                          <p className="attendance-good-text">Your attendance is good. Keep it up!</p>
+                        ) : (
+                          <p className="attendance-warning-text">Your attendance is below 75%. Please improve your attendance.</p>
+                        )}
                       </div>
+
+                      <div className="attendance-month-table-card">
+                        <div className="attendance-month-header-row">
+                          <h3>Attendance: Jun 2026</h3>
+                          <select className="month-select-dropdown" defaultValue="Jun 2026"><option>Jun 2026</option></select>
+                        </div>
+                        <div className="table-responsive-wrapper">
+                          <table className="client-data-table plain-table">
+                            <thead><tr><th>Date</th><th>Status</th></tr></thead>
+                            <tbody>
+                              {studentAttendanceLog.map((row, idx) => (
+                                <tr key={idx}>
+                                  <td>{row[0]}</td>
+                                  <td><span className={row[1] === 'Present' ? 'badge-present-status' : 'badge-notmarked-status'}>{row[1]}</span></td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })()}
+
+                {studentTab === 'assignments' && (() => {
+                  const total = studentAssignmentsLog.length;
+                  const submitted = studentAssignmentsLog.filter(a => a[2] !== 'Not Submitted').length;
+                  const approved = studentAssignmentsLog.filter(a => a[2] === 'Approved').length;
+                  const notApproved = studentAssignmentsLog.filter(a => a[2] === 'Not Approved').length;
+                  return (
+                    <div className="tab-render-container">
+                      <section className="attendance-stat-cards-row student-stats-row">
+                        <div className="attendance-stat-card"><div><h3>{total}</h3><p>Total Assignments</p></div><div className="stat-badge-icon blue-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div></div>
+                        <div className="attendance-stat-card"><div><h3>{submitted}</h3><p>Submitted</p></div><div className="stat-badge-icon green-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2"><polyline points="20 6 9 17 4 12"/></svg></div></div>
+                        <div className="attendance-stat-card"><div><h3>{approved}</h3><p>Approved</p></div><div className="stat-badge-icon green-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2"><polyline points="20 6 9 17 4 12"/></svg></div></div>
+                        <div className="attendance-stat-card"><div><h3>{notApproved}</h3><p>Not Approved</p></div><div className="stat-badge-icon red-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/></svg></div></div>
+                      </section>
+
+                      <div className="attendance-month-table-card">
+                        <div className="attendance-month-header-row">
+                          <h3>Assignments</h3>
+                        </div>
+                        <div className="table-responsive-wrapper">
+                          <table className="client-data-table">
+                            <thead><tr><th>#</th><th>Title</th><th>Due Date</th><th>Submission</th><th>Feedback</th></tr></thead>
+                            <tbody>
+                              {studentAssignmentsLog.map((row, idx) => {
+                                const [title, dueDate, submission, feedback, tag] = row;
+                                let badgeClass = 'badge-notsubmitted-status';
+                                if (submission === 'Approved') badgeClass = 'badge-approved-status';
+                                else if (submission === 'Not Approved') badgeClass = 'badge-notapproved-status';
+                                return (
+                                  <tr key={idx}>
+                                    <td>{idx + 1}</td>
+                                    <td>
+                                      <div className="assignment-title-cell">
+                                        <span>{title}</span>
+                                        {tag && <span className="hackathon-tag-badge">{tag}</span>}
+                                      </div>
+                                    </td>
+                                    <td>{dueDate}</td>
+                                    <td><span className={badgeClass}>{submission}</span></td>
+                                    <td className="feedback-text-cell">{feedback ? feedback : '—'}</td>
+                                  </tr>
+                                );
+                              })}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })()}
+
+                {studentTab === 'quizzes' && (
+                  <div className="tab-render-container">
+                    <div className="quiz-results-card-frame">
+                      <h3>Quiz Results</h3>
                       <div className="table-responsive-wrapper">
-                        <table className="client-data-table plain-table">
-                          <thead><tr><th>Date</th><th>Status</th></tr></thead>
+                        <table className="client-data-table">
+                          <thead>
+                            <tr><th>#</th><th>Quiz Title</th><th>Score</th><th>Total Questions</th><th>Percentage</th><th>Attempts</th><th>Status</th><th>Date</th></tr>
+                          </thead>
                           <tbody>
-                            {studentAttendanceLog.map((row, idx) => (
-                              <tr key={idx}>
-                                <td>{row[0]}</td>
-                                <td><span className={row[1] === 'Present' ? 'badge-present-status' : 'badge-notmarked-status'}>{row[1]}</span></td>
-                              </tr>
-                            ))}
+                            {studentQuizzesLog.map((row, idx) => {
+                              const [title, score, totalQ, attempts, date] = row;
+                              const pct = Math.round((score / totalQ) * 100);
+                              const passed = pct >= 50;
+                              return (
+                                <tr key={idx}>
+                                  <td>{idx + 1}</td>
+                                  <td>{title}</td>
+                                  <td>{score}</td>
+                                  <td>{totalQ}</td>
+                                  <td><span className={passed ? 'quiz-percentage-passed' : 'quiz-percentage-failed'}>{pct}%</span></td>
+                                  <td>{attempts}</td>
+                                  <td><span className={passed ? 'badge-passed-status' : 'badge-failed-status'}>{passed ? 'Passed' : 'Failed'}</span></td>
+                                  <td>{date}</td>
+                                </tr>
+                              );
+                            })}
                           </tbody>
                         </table>
                       </div>
                     </div>
                   </div>
                 )}
-                {studentTab === 'assignments' && <div className="workspace-card-view"><p style={{color: 'var(--text-muted)'}}>No assignments posted yet for this student.</p></div>}
-                {studentTab === 'quizzes' && <div className="workspace-card-view"><p style={{color: 'var(--text-muted)'}}>No active quizzes for this student.</p></div>}
               </div>
             ) : (
               <div className="expanded-course-workspace-card animated-fade">
                 <div className="breadcrumbs">
-                  <span className="breadcrumb-nav-link" onClick={() => setSelectedCourse(null)}>Dashboard</span> &gt; <span className="current-crumb">{selectedCourse.title}</span>
+                  <span className="breadcrumb-nav-link" onClick={() => { setSelectedCourse(null); setGenderSection(null); }}>Dashboard</span> &gt; <span className="breadcrumb-nav-link" onClick={() => setSelectedCourse(null)}>{genderSection}</span> &gt; <span className="current-crumb">{selectedCourse.title}</span>
                 </div>
 
                 <div className="course-header-interactive-row"><h2>{selectedCourse.title}</h2></div>
@@ -556,21 +918,29 @@ const Dashboard = () => {
 
                   {activeCourseTab === 'attendance' && (
                     <div className="attendance-view-block">
-                      <div className="attendance-summary-cards-row">
-                        <div className="summary-pill-card gray-theme-box"><h5>37</h5><p>Total Students</p></div>
-                        <div className="summary-pill-card green-theme-box"><h5>30</h5><p>Present</p></div>
-                        <div className="summary-pill-card red-theme-box"><h5>7</h5><p>Absent</p></div>
+                      <div className="attendance-date-picker-row">
+                        <label>Select a Date</label>
+                        <input
+                          type="date"
+                          className="attendance-date-picker-input"
+                          value={courseAttendanceDate}
+                          onChange={(e) => setCourseAttendanceDate(e.target.value)}
+                        />
                       </div>
+
+                      <div className="attendance-summary-cards-row">
+                        <div className="summary-pill-card gray-theme-box"><h5>{courseAttendanceByDate.length}</h5><p>Total Students</p></div>
+                        <div className="summary-pill-card green-theme-box"><h5>{courseAttPresentCount}</h5><p>Present</p></div>
+                        <div className="summary-pill-card gray-theme-box"><h5>{courseAttNotMarkedCount}</h5><p>Leave</p></div>
+                        <div className="summary-pill-card red-theme-box"><h5>{courseAttAbsentCount}</h5><p>Absent</p></div>
+                      </div>
+
                       <div className="table-responsive-wrapper">
+                        <div className="attendance-for-date-heading">Attendance for {formatCourseAttendanceHeading(courseAttendanceDate)}</div>
                         <table className="client-data-table plain-table">
                           <thead><tr><th>Roll #</th><th>Full Name</th><th>Status</th></tr></thead>
                           <tbody>
-                            {[
-                              ["382282", "Waqar Ali", "PRESENT"], ["463342", "Qaimudin Khuwaja", "NOT MARKED"],
-                              ["464127", "Muhammad yaseen", "PRESENT"], ["465184", "Muhammad Masood", "PRESENT"],
-                              ["465921", "Muhammad Bin Azam", "NOT MARKED"], ["466584", "Shoaib Ahmed", "PRESENT"],
-                              ["466824", "Muhammad Hassan Memon", "PRESENT"]
-                            ].map((row, index) => (
+                            {courseAttendanceByDate.map((row, index) => (
                               <tr key={index}>
                                 <td>{row[0]}</td>
                                 <td>{row[1]}</td>

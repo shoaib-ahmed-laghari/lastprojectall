@@ -207,6 +207,20 @@ body {
 .day-pill span { font-weight: 700; margin-top: 2px; }
 
 .section-title-bar h3 { margin: 0 0 16px 0; font-size: 16px; font-weight: 700; }
+
+/* Male/Female section entry cards */
+.gender-section-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+.gender-section-card { background: #ffffff; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 28px 22px; cursor: pointer; transition: box-shadow 0.15s ease, transform 0.15s ease; }
+.gender-section-card:hover { box-shadow: 0 6px 18px rgba(0,0,0,0.08); transform: translateY(-2px); }
+.gender-section-card h3 { margin: 16px 0 4px 0; font-size: 18px; font-weight: 700; }
+.gender-section-icon-badge { width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+.gender-section-meta { margin: 0; font-size: 13px; color: var(--text-muted); }
+.gender-section-arrow { display: inline-block; margin-top: 14px; font-size: 13px; font-weight: 700; color: var(--primary-blue); }
+
+.gender-section-header-row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 16px; }
+.gender-section-header-row h3 { margin: 0; }
+.gender-course-search-box { max-width: 320px; }
+
 .courses-responsive-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
 .course-clean-card { background: #ffffff; border-radius: var(--radius-md); border: 1px solid var(--border-color); overflow: hidden; cursor: pointer; display: flex; flex-direction: column; justify-content: space-between; }
 .card-top-accent { padding: 16px; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
@@ -283,15 +297,18 @@ body {
 
 /* ================= PROFILE PAGE ================= */
 .profile-page-wrapper h1 { margin: 0; font-size: 22px; font-weight: 700; }
-.profile-cover-banner { height: 130px; border-radius: var(--radius-md); background: linear-gradient(120deg, #1e40af, #4338ca); background-size: cover; background-position: center; position: relative; margin-bottom: 50px; }
-.profile-cover-avatar { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 4px solid #fff; position: absolute; left: 24px; bottom: -45px; }
+.profile-cover-banner { height: 150px; border-radius: var(--radius-md); background: linear-gradient(135deg, #0b1c3d 0%, #142a52 45%, #b8862e 80%, #d4af37 100%); position: relative; margin-bottom: 50px; overflow: hidden; }
+.profile-cover-logo-img { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); max-height: 70%; max-width: 55%; object-fit: contain; opacity: 0.22; mix-blend-mode: luminosity; }
+.profile-cover-avatar { width: 96px; height: 96px; border-radius: 50%; object-fit: cover; border: 4px solid #d4af37; box-shadow: 0 0 0 3px #ffffff, 0 4px 10px rgba(0,0,0,0.2); position: absolute; left: 24px; bottom: -48px; z-index: 2; background: #fff; }
+.profile-name-edit-input { font-size: 22px; font-weight: 700; padding: 6px 10px; border: 1px solid #d1d5db; border-radius: var(--radius-sm); font-family: inherit; width: 100%; max-width: 320px; }
+.info-edit-input { font-size: 13px; font-weight: 600; padding: 5px 8px; border: 1px solid #d1d5db; border-radius: var(--radius-sm); font-family: inherit; text-align: right; width: 60%; }
 
 .tab-action-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 10px; }
 .tab-action-header-row h3 { margin: 0; font-size: 15px; font-weight: 700; }
 .new-item-action-btn { display: flex; align-items: center; gap: 6px; background: var(--primary-blue); color: #fff; border: none; padding: 9px 14px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 700; cursor: pointer; }
 .new-item-action-btn:hover { opacity: 0.9; }
 .profile-identity-row { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px; margin-bottom: 28px; padding-left: 4px; }
-.role-pill-tag { display: inline-block; margin-top: 8px; font-size: 12px; font-weight: 700; background: #eff6ff; color: var(--primary-blue); padding: 4px 10px; border-radius: 5px; }
+.role-pill-tag { display: inline-block; margin-top: 8px; font-size: 12px; font-weight: 700; background: #fdf3dd; color: #92660e; border: 1px solid #e9c873; padding: 4px 10px; border-radius: 5px; }
 .profile-action-buttons { display: flex; gap: 10px; }
 .btn-outline-action { background: #fff; border: 1px solid #c7c7c7; padding: 9px 16px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 700; cursor: pointer; }
 .btn-dark-action { background: #111111; color: #fff; border: none; padding: 9px 16px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 700; cursor: pointer; }
@@ -364,10 +381,33 @@ body {
 .overview-progress-rail { height: 8px; background: #eee; border-radius: 4px; overflow: hidden; }
 .overview-progress-fill { height: 100%; background: #ef4444; }
 .attendance-warning-text { color: #d97706; font-size: 12px; margin: 10px 0 0 0; font-weight: 600; }
+.attendance-good-text { color: #16a34a; font-size: 12px; margin: 10px 0 0 0; font-weight: 600; }
 .attendance-month-table-card { background: #ffffff; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 18px; }
 .attendance-month-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 10px; }
 .attendance-month-header-row h3 { margin: 0; font-size: 15px; font-weight: 700; }
 .month-select-dropdown { padding: 7px 10px; border: 1px solid #ddd; border-radius: var(--radius-sm); font-size: 12px; background: #fff; }
+
+/* ================= ASSIGNMENTS TABLE (Student) ================= */
+.assignment-title-cell { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.hackathon-tag-badge { background: #f3e8ff; color: #9333ea; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; white-space: nowrap; }
+.badge-approved-status { background: #e6fdf4; color: #10b981; padding: 4px 8px; font-size: 11px; font-weight: 700; border-radius: 4px; }
+.badge-notsubmitted-status { background: #f5f5f5; color: #999; padding: 4px 8px; font-size: 11px; font-weight: 700; border-radius: 4px; }
+.badge-notapproved-status { background: #fef2f2; color: #dc2626; padding: 4px 8px; font-size: 11px; font-weight: 700; border-radius: 4px; }
+.feedback-text-cell { color: var(--text-muted); font-size: 13px; }
+
+/* ================= QUIZZES TABLE (Student) ================= */
+.quiz-results-card-frame { background: #ffffff; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 20px; }
+.quiz-results-card-frame h3 { margin: 0 0 16px 0; font-size: 16px; font-weight: 700; }
+.quiz-percentage-passed { color: #16a34a; font-weight: 700; }
+.quiz-percentage-failed { color: #dc2626; font-weight: 700; }
+.badge-passed-status { background: #e6fdf4; color: #10b981; padding: 4px 10px; font-size: 11px; font-weight: 700; border-radius: 12px; }
+.badge-failed-status { background: #fef2f2; color: #dc2626; padding: 4px 10px; font-size: 11px; font-weight: 700; border-radius: 12px; }
+
+/* ================= COURSE-LEVEL ATTENDANCE DATE PICKER ================= */
+.attendance-date-picker-row { margin-bottom: 18px; }
+.attendance-date-picker-row label { display: block; font-size: 13px; font-weight: 700; color: var(--text-dark); margin-bottom: 8px; }
+.attendance-date-picker-input { padding: 9px 12px; border: 1px solid #ddd; border-radius: var(--radius-sm); font-size: 13px; width: 220px; max-width: 100%; font-family: inherit; }
+.attendance-for-date-heading { text-align: center; font-size: 15px; font-weight: 700; padding: 16px 12px; border-bottom: 1px solid var(--border-color); }
 
 /* ================= RESPONSIVE ENGINE ================= */
 @media screen and (max-width: 768px) {
@@ -385,6 +425,8 @@ body {
 
   .profile-identity-row { flex-direction: column; }
   .courses-responsive-grid { grid-template-columns: 1fr; }
+  .gender-section-header-row { flex-direction: column; align-items: stretch; }
+  .gender-course-search-box { max-width: 100%; }
   .profile-cover-avatar { left: 16px; }
   .attendance-top-header-row { flex-direction: column; align-items: stretch; }
   .course-selector-dropdown-wrap { max-width: 100%; }
@@ -395,6 +437,7 @@ body {
   .table-pagination-footer-row { flex-direction: column; align-items: flex-start; }
   .calendar-month-nav-row h3 { min-width: 120px; font-size: 14px; }
   .cal-day-cell { min-height: 80px; font-size: 11px; }
+  .attendance-date-picker-input { width: 100%; }
 }
 
 @media screen and (max-width: 480px) {
