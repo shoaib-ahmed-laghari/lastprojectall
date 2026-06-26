@@ -32,11 +32,11 @@ export default function TitanPortal({ onLoginSuccess }) {
         alert("Invalid Trainer Email or Password!");
       }
     } else if (view === 'student-login') {
-      // Student Login Check
-      if (cnic.trim() !== '' && password.trim() !== '') {
-        onLoginSuccess('student', { name: "Portal Student", cnic: cnic });
+      // Student Login Check (hardcoded demo credentials)
+      if (cnic.trim() === '4550290108391' && password === 'Hasnain') {
+        onLoginSuccess('student', { name: "Hasnain", cnic: cnic });
       } else {
-        alert("Please enter valid CNIC and Password!");
+        alert("Invalid CNIC or Password!");
       }
     } else if (view === 'student-register') {
       alert("Password created successfully! Kindly switch to Login tab.");

@@ -1,58 +1,75 @@
-// import React from 'react';
-// // Yeh line aapko sabse upar likhni hy
-// import TitanPortal from './components/TitanPortal'; 
-// import Dashboard from './components/Dashboard';
+import { BrowserRouter, Routes, Route, Navigate, useNavigate } from "react-router-dom";
+import { useState } from "react";
 
-// function App() {
-//   return (
-//     <div className="App">
-//       {/* Yahan aapka component screen par show hoga */}
-//       <TitanPortal />
-//       <Dashboard/>
-//     </div>
-//   );
-// }
-
-// export default App;
-import React, { useState } from 'react';
-import TitanPortal from './components/TitanPortal';
-import Dashboard from './components/Dashboard';
+import TitanPortal from "./components/TitanPortal";
+import Dashboard from "./components/Dashboard";
+import StudentDashboard from "./components/StudentDashboard";
 
 function App() {
-  const [userSession, setUserSession] = useState({
+  const [user, setUser] = useState({
     isLoggedIn: false,
-    role: null, // 'student' or 'trainer'
-    info: null
+    role: "",
+    data: null,
   });
 
-  const handleLoginSuccess = (role, extraInfo) => {
-    setUserSession({
+  const handleLoginSuccess = (role, data) => {
+    setUser({
       isLoggedIn: true,
-      role: role,
-      info: extraInfo
+      role,
+      data,
     });
   };
 
   const handleLogout = () => {
-    setUserSession({
+    setUser({
       isLoggedIn: false,
-      role: null,
-      info: null
+      role: "",
+      data: null,
     });
   };
 
   return (
-    <div className="app-root">
-      {!userSession.isLoggedIn ? (
-        <TitanPortal onLoginSuccess={handleLoginSuccess} />
-      ) : (
-        <Dashboard 
-          userRole={userSession.role} 
-          sessionInfo={userSession.info} 
-          onLogout={handleLogout} 
+    <BrowserRouter>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            !user.isLoggedIn ? (
+              <TitanPortal onLoginSuccess={handleLoginSuccess} />
+            ) : user.role === "trainer" ? (
+              <Navigate to="/trainer" replace />
+            ) : (
+              <Navigate to="/student" replace />
+            )
+          }
         />
-      )}
-    </div>
+
+        <Route
+          path="/trainer"
+          element={
+            user.isLoggedIn && user.role === "trainer" ? (
+              <Dashboard onLogout={handleLogout} />
+            ) : (
+              <Navigate to="/" replace />
+            )
+          }
+        />
+
+        <Route
+          path="/student"
+          element={
+            user.isLoggedIn && user.role === "student" ? (
+              <StudentDashboard
+                studentName={user.data?.name}
+                onLogout={handleLogout}
+              />
+            ) : (
+              <Navigate to="/" replace />
+            )
+          }
+        />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

@@ -1,14 +1,12 @@
 import React, { useState, useRef } from 'react';
 import './Dashboard.css';
-import TitanPortal from './TitanPortal';
 
 const TITAN_LOGO = 'https://i.ibb.co/q3c3CkLS/titan-logo.jpg';
 const TITAN_LOGO_BG = 'https://i.ibb.co/Zz3Hk1Q5/titan-logo-bg.jpg';
 const SIR_YASIR_PHOTO = 'https://i.ibb.co/wF2jCyRH/WhatsApp-Image-2026-03-18-at-5-47-44-PM.jpg';
-const PROFILE_BG_IMG = 'https://i.ibb.co/KpqK8HXv/sediment-public-high-school-islamabad.png';
+const PROFILE_BG_IMG = 'https://i.ibb.co/0FqY1Z2/Whats-App-Image-2026-03-18-at-5-47-44-PM.jpg';
 
-const Dashboard = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const Dashboard = ({ onLogout }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [currentMenu, setCurrentMenu] = useState('dashboard');
   const [selectedCourse, setSelectedCourse] = useState(null);
@@ -72,14 +70,14 @@ const Dashboard = () => {
   };
 
   const handleLogoutAction = () => {
-    setIsLoggedIn(false);
     setIsSidebarOpen(false);
     setSelectedCourse(null);
     setGenderSection(null);
     setCourseSearchQuery('');
     setCurrentMenu('dashboard');
     setProfileMenuOpen(false);
-  };
+    if (onLogout) onLogout();
+};
 
   const startEditingProfile = () => {
     setProfileDraft(trainerProfile);
@@ -325,8 +323,8 @@ const Dashboard = () => {
     student.name.toLowerCase().includes(searchQuery.toLowerCase()) || student.code.includes(searchQuery)
   );
 
-  const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-  const weekDays = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+  const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
   const buildCalendarGrid = (month, year) => {
     const firstDay = new Date(year, month, 1).getDay();
@@ -362,8 +360,8 @@ const Dashboard = () => {
   const formatCourseAttendanceHeading = (isoDate) => {
     const d = new Date(isoDate + "T00:00:00");
     if (isNaN(d.getTime())) return isoDate;
-    const days = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
-    return `${days[d.getDay()]} ${monthNames[d.getMonth()].slice(0,3)} ${d.getDate()} ${d.getFullYear()}`;
+    const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    return `${days[d.getDay()]} ${monthNames[d.getMonth()].slice(0, 3)} ${d.getDate()} ${d.getFullYear()}`;
   };
 
   const courseAttPresentCount = courseAttendanceByDate.filter(r => r[2] === 'PRESENT').length;
@@ -388,9 +386,9 @@ const Dashboard = () => {
     const offset = circ - (pct / 100) * circ;
     return (
       <svg width={size} height={size} style={{ transform: 'rotate(-90deg)', flexShrink: 0 }}>
-        <circle cx={size/2} cy={size/2} r={r} fill="none" stroke="#e5e7eb" strokeWidth={stroke} />
-        <circle cx={size/2} cy={size/2} r={r} fill="none" stroke={pct === 100 ? '#10b981' : pct >= 50 ? color : '#f59e0b'} strokeWidth={stroke} strokeDasharray={circ} strokeDashoffset={offset} strokeLinecap="round" />
-        <text x={size/2} y={size/2} textAnchor="middle" dominantBaseline="middle" fontSize="10" fontWeight="700" fill={pct === 100 ? '#10b981' : pct >= 50 ? color : '#f59e0b'} style={{ transform: `rotate(90deg) translate(0, -${size}px)` }}>{pct}%</text>
+        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="#e5e7eb" strokeWidth={stroke} />
+        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke={pct === 100 ? '#10b981' : pct >= 50 ? color : '#f59e0b'} strokeWidth={stroke} strokeDasharray={circ} strokeDashoffset={offset} strokeLinecap="round" />
+        <text x={size / 2} y={size / 2} textAnchor="middle" dominantBaseline="middle" fontSize="10" fontWeight="700" fill={pct === 100 ? '#10b981' : pct >= 50 ? color : '#f59e0b'} style={{ transform: `rotate(90deg) translate(0, -${size}px)` }}>{pct}%</text>
       </svg>
     );
   };
@@ -406,18 +404,12 @@ const Dashboard = () => {
     setSubmissionApprovals(prev => ({ ...prev, [`${assignId}-${subIdx}`]: val }));
   };
 
-  if (!isLoggedIn) {
-    return (
-      <TitanPortal onLoginSuccess={(role, userData) => { setIsLoggedIn(true); setCurrentMenu('dashboard'); setSelectedCourse(null); }} />
-    );
-  }
-
   return (
     <div className="portal-container">
       <div className="mobile-header-notch-bar">
         <button className="mobile-hamburger-btn" onClick={toggleSidebar} aria-label="Menu">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/>
+            <line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="18" x2="21" y2="18" />
           </svg>
         </button>
         <img src={TITAN_LOGO} alt="TITAN" className="mobile-brand-logo-img" />
@@ -429,7 +421,7 @@ const Dashboard = () => {
       <aside className={`sidebar ${isSidebarOpen ? 'expanded' : 'collapsed'}`}>
         <div className="toggle-trigger-action" onClick={toggleSidebar}>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#475569" strokeWidth="2.5">
-            {isSidebarOpen ? <polyline points="15 18 9 12 15 6"/> : <polyline points="9 18 15 12 9 6"/>}
+            {isSidebarOpen ? <polyline points="15 18 9 12 15 6" /> : <polyline points="9 18 15 12 9 6" />}
           </svg>
         </div>
         <div className="logo-container-vertical">
@@ -440,15 +432,15 @@ const Dashboard = () => {
         </div>
         <nav className="nav-menu">
           <div className={`nav-item ${currentMenu === 'dashboard' ? 'active' : ''}`} onClick={() => goTo('dashboard')}>
-            <svg className="nav-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+            <svg className="nav-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="7" rx="1" /><rect x="14" y="3" width="7" height="7" rx="1" /><rect x="14" y="14" width="7" height="7" rx="1" /><rect x="3" y="14" width="7" height="7" rx="1" /></svg>
             {isSidebarOpen && <span className="nav-text">Dashboard</span>}
           </div>
           <div className={`nav-item ${currentMenu === 'calendar' ? 'active' : ''}`} onClick={() => goTo('calendar')}>
-            <svg className="nav-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            <svg className="nav-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>
             {isSidebarOpen && <span className="nav-text">Calendar</span>}
           </div>
           <div className={`nav-item ${currentMenu === 'attendance' ? 'active' : ''}`} onClick={() => goTo('attendance')}>
-            <svg className="nav-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            <svg className="nav-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="16" y1="13" x2="8" y2="13" /><line x1="16" y1="17" x2="8" y2="17" /></svg>
             {isSidebarOpen && <span className="nav-text">Attendance</span>}
           </div>
         </nav>
@@ -456,11 +448,11 @@ const Dashboard = () => {
           {profileMenuOpen && (
             <div className="profile-popup-menu">
               <div className="profile-popup-item" onClick={() => goTo('profile')}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
                 <span>Profile</span>
               </div>
               <div className="profile-popup-item logout-popup-item" onClick={handleLogoutAction}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" y1="12" x2="9" y2="12" /></svg>
                 <span>Log out</span>
               </div>
             </div>
@@ -490,7 +482,7 @@ const Dashboard = () => {
                 <img src={isEditingProfile ? profilePhotoDraft : profilePhoto} alt="Avatar" className="profile-cover-avatar" />
                 {isEditingProfile && (
                   <button className="profile-photo-upload-btn" onClick={() => photoInputRef.current?.click()} title="Change photo">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" /><circle cx="12" cy="13" r="4" /></svg>
                   </button>
                 )}
                 <input ref={photoInputRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={handlePhotoChange} />
@@ -562,9 +554,9 @@ const Dashboard = () => {
             <h1>Calendar</h1>
             <div className="calendar-card-frame">
               <div className="calendar-month-nav-row">
-                <button className="cal-nav-btn" onClick={() => changeMonth(-1)}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="15 18 9 12 15 6"/></svg></button>
+                <button className="cal-nav-btn" onClick={() => changeMonth(-1)}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="15 18 9 12 15 6" /></svg></button>
                 <h3>{monthNames[calMonth]} {calYear}</h3>
-                <button className="cal-nav-btn" onClick={() => changeMonth(1)}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 18 15 12 9 6"/></svg></button>
+                <button className="cal-nav-btn" onClick={() => changeMonth(1)}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 18 15 12 9 6" /></svg></button>
               </div>
               <div className="calendar-weekday-header-row">{weekDays.map(d => <div key={d} className="cal-weekday-cell">{d}</div>)}</div>
               <div className="calendar-grid-body">
@@ -572,7 +564,7 @@ const Dashboard = () => {
                   <div key={idx} className={`cal-day-cell ${day === todayMarker && calMonth === 5 ? 'cal-today' : ''} ${!day ? 'cal-empty' : ''}`}>
                     {day && (<>
                       <div className="cal-day-number-row"><span>{day}</span>{getDayEvents(day).length > 0 && <span className="cal-day-dot"></span>}</div>
-                      <div className="cal-events-stack">{getDayEvents(day).slice(0,2).map((ev,i) => <div key={i} className="cal-event-pill" style={{background: ev.color}}>{ev.label}</div>)}</div>
+                      <div className="cal-events-stack">{getDayEvents(day).slice(0, 2).map((ev, i) => <div key={i} className="cal-event-pill" style={{ background: ev.color }}>{ev.label}</div>)}</div>
                     </>)}
                   </div>
                 ))}
@@ -588,9 +580,9 @@ const Dashboard = () => {
               <h1>Attendance</h1>
               <div className="course-selector-dropdown-wrap">
                 <div className="course-selector-trigger" onClick={() => setAttCourseDropdownOpen(!attCourseDropdownOpen)}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
                   <div><strong>{courses[attendanceCourseFilter].title}</strong><p>{courses[attendanceCourseFilter].schedule}</p></div>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="6 9 12 15 18 9"/></svg>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="6 9 12 15 18 9" /></svg>
                 </div>
                 {attCourseDropdownOpen && (
                   <div className="course-selector-options-list">
@@ -609,9 +601,9 @@ const Dashboard = () => {
               </div>
             </div>
             <section className="attendance-stat-cards-row">
-              <div className="attendance-stat-card"><div><h3>0</h3><p>Total Classes</p></div><div className="stat-badge-icon blue-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/></svg></div></div>
-              <div className="attendance-stat-card"><div><h3>0m</h3><p>Total Time Served</p></div><div className="stat-badge-icon green-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div></div>
-              <div className="attendance-stat-card"><div><h3>0m</h3><p>Total Late Time</p></div><div className="stat-badge-icon red-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div></div>
+              <div className="attendance-stat-card"><div><h3>0</h3><p>Total Classes</p></div><div className="stat-badge-icon blue-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /></svg></div></div>
+              <div className="attendance-stat-card"><div><h3>0m</h3><p>Total Time Served</p></div><div className="stat-badge-icon green-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg></div></div>
+              <div className="attendance-stat-card"><div><h3>0m</h3><p>Total Late Time</p></div><div className="stat-badge-icon red-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg></div></div>
             </section>
             <div className="attendance-records-card-frame">
               <div className="attendance-records-header-row">
@@ -642,11 +634,11 @@ const Dashboard = () => {
               <>
                 <div className="dashboard-title-row"><h1>Dashboard</h1></div>
                 <section className="stats-grid-row">
-                  <div className="stat-card"><div className="stat-content"><h3>6</h3><p>Active Courses</p></div><div className="stat-badge-icon green-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div></div>
-                  <div className="stat-card"><div className="stat-content"><h3>102</h3><p>Enrolled Students</p></div><div className="stat-badge-icon blue-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div></div>
-                  <div className="stat-card"><div className="stat-content"><h3>0</h3><p>Total Assignments</p></div><div className="stat-badge-icon purple-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div></div>
+                  <div className="stat-card"><div className="stat-content"><h3>6</h3><p>Active Courses</p></div><div className="stat-badge-icon green-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" /><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" /></svg></div></div>
+                  <div className="stat-card"><div className="stat-content"><h3>102</h3><p>Enrolled Students</p></div><div className="stat-badge-icon blue-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg></div></div>
+                  <div className="stat-card"><div className="stat-content"><h3>0</h3><p>Total Assignments</p></div><div className="stat-badge-icon purple-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /></svg></div></div>
                   <div className="schedule-compact-widget">
-                    <div className="schedule-title-row"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{marginRight:'6px'}}><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Teaching Schedule</div>
+                    <div className="schedule-title-row"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ marginRight: '6px' }}><rect x="3" y="4" width="18" height="18" rx="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>Teaching Schedule</div>
                     <div className="schedule-days-flex">
                       <div className="day-pill present">Sun <span>14</span></div>
                       <div className="day-pill present">Mon <span>15</span></div>
@@ -664,13 +656,13 @@ const Dashboard = () => {
                     <div className="section-title-bar"><h3>Active Courses</h3></div>
                     <section className="gender-section-grid">
                       <div className="gender-section-card male-section-card" onClick={() => { setGenderSection('Male'); setCourseSearchQuery(''); }}>
-                        <div className="gender-section-icon-badge blue-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="2"><circle cx="12" cy="7" r="4"/><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/></svg></div>
+                        <div className="gender-section-icon-badge blue-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="2"><circle cx="12" cy="7" r="4" /><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /></svg></div>
                         <h3>Male Courses</h3>
                         <p className="gender-section-meta">{maleCourses.length} active courses · {maleEnrolledTotal} students</p>
                         <span className="gender-section-arrow">View courses →</span>
                       </div>
                       <div className="gender-section-card female-section-card" onClick={() => { setGenderSection('Female'); setCourseSearchQuery(''); }}>
-                        <div className="gender-section-icon-badge purple-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#9333ea" strokeWidth="2"><circle cx="12" cy="7" r="4"/><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/></svg></div>
+                        <div className="gender-section-icon-badge purple-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#9333ea" strokeWidth="2"><circle cx="12" cy="7" r="4" /><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /></svg></div>
                         <h3>Female Courses</h3>
                         <p className="gender-section-meta">{femaleCourses.length} active courses · {femaleEnrolledTotal} students</p>
                         <span className="gender-section-arrow">View courses →</span>
@@ -733,10 +725,10 @@ const Dashboard = () => {
                   return (
                     <div className="tab-render-container">
                       <section className="attendance-stat-cards-row student-stats-row">
-                        <div className="attendance-stat-card"><div><h3>{totalClasses}</h3><p>Total Classes</p></div><div className="stat-badge-icon blue-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2"/></svg></div></div>
-                        <div className="attendance-stat-card"><div><h3>{present}</h3><p>Present</p></div><div className="stat-badge-icon green-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2"><polyline points="20 6 9 17 4 12"/></svg></div></div>
-                        <div className="attendance-stat-card"><div><h3>{leave}</h3><p>Leave</p></div><div className="stat-badge-icon amber-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#d97706" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/></svg></div></div>
-                        <div className="attendance-stat-card"><div><h3>{absent}</h3><p>Absent</p></div><div className="stat-badge-icon red-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/></svg></div></div>
+                        <div className="attendance-stat-card"><div><h3>{totalClasses}</h3><p>Total Classes</p></div><div className="stat-badge-icon blue-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2" /></svg></div></div>
+                        <div className="attendance-stat-card"><div><h3>{present}</h3><p>Present</p></div><div className="stat-badge-icon green-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2"><polyline points="20 6 9 17 4 12" /></svg></div></div>
+                        <div className="attendance-stat-card"><div><h3>{leave}</h3><p>Leave</p></div><div className="stat-badge-icon amber-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#d97706" strokeWidth="2"><circle cx="12" cy="12" r="10" /><line x1="15" y1="9" x2="9" y2="15" /></svg></div></div>
+                        <div className="attendance-stat-card"><div><h3>{absent}</h3><p>Absent</p></div><div className="stat-badge-icon red-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2"><circle cx="12" cy="12" r="10" /><line x1="15" y1="9" x2="9" y2="15" /></svg></div></div>
                       </section>
                       <div className="attendance-overview-card">
                         <h3>Attendance Overview</h3>
@@ -751,7 +743,7 @@ const Dashboard = () => {
                         <div className="table-responsive-wrapper">
                           <table className="client-data-table plain-table">
                             <thead><tr><th>Date</th><th>Status</th></tr></thead>
-                            <tbody>{studentAttendanceLog.map((row, idx) => <tr key={idx}><td>{row[0]}</td><td><span className={row[1]==='Present'?'badge-present-status':'badge-notmarked-status'}>{row[1]}</span></td></tr>)}</tbody>
+                            <tbody>{studentAttendanceLog.map((row, idx) => <tr key={idx}><td>{row[0]}</td><td><span className={row[1] === 'Present' ? 'badge-present-status' : 'badge-notmarked-status'}>{row[1]}</span></td></tr>)}</tbody>
                           </table>
                         </div>
                       </div>
@@ -767,10 +759,10 @@ const Dashboard = () => {
                   return (
                     <div className="tab-render-container">
                       <section className="attendance-stat-cards-row student-stats-row">
-                        <div className="attendance-stat-card"><div><h3>{total}</h3><p>Total Assignments</p></div><div className="stat-badge-icon blue-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div></div>
-                        <div className="attendance-stat-card"><div><h3>{submitted}</h3><p>Submitted</p></div><div className="stat-badge-icon green-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2"><polyline points="20 6 9 17 4 12"/></svg></div></div>
-                        <div className="attendance-stat-card"><div><h3>{approved}</h3><p>Approved</p></div><div className="stat-badge-icon green-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2"><polyline points="20 6 9 17 4 12"/></svg></div></div>
-                        <div className="attendance-stat-card"><div><h3>{notApproved}</h3><p>Not Approved</p></div><div className="stat-badge-icon red-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/></svg></div></div>
+                        <div className="attendance-stat-card"><div><h3>{total}</h3><p>Total Assignments</p></div><div className="stat-badge-icon blue-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /></svg></div></div>
+                        <div className="attendance-stat-card"><div><h3>{submitted}</h3><p>Submitted</p></div><div className="stat-badge-icon green-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2"><polyline points="20 6 9 17 4 12" /></svg></div></div>
+                        <div className="attendance-stat-card"><div><h3>{approved}</h3><p>Approved</p></div><div className="stat-badge-icon green-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2"><polyline points="20 6 9 17 4 12" /></svg></div></div>
+                        <div className="attendance-stat-card"><div><h3>{notApproved}</h3><p>Not Approved</p></div><div className="stat-badge-icon red-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2"><circle cx="12" cy="12" r="10" /><line x1="15" y1="9" x2="9" y2="15" /></svg></div></div>
                       </section>
                       <div className="attendance-month-table-card">
                         <div className="attendance-month-header-row"><h3>Assignments</h3></div>
@@ -785,7 +777,7 @@ const Dashboard = () => {
                                 else if (submission === 'Not Approved') badgeClass = 'badge-notapproved-status';
                                 return (
                                   <tr key={idx}>
-                                    <td>{idx+1}</td>
+                                    <td>{idx + 1}</td>
                                     <td><div className="assignment-title-cell"><span>{title}</span>{tag && <span className="hackathon-tag-badge">{tag}</span>}</div></td>
                                     <td>{dueDate}</td>
                                     <td><span className={badgeClass}>{submission}</span></td>
@@ -815,10 +807,10 @@ const Dashboard = () => {
                               const passed = pct >= 50;
                               return (
                                 <tr key={idx}>
-                                  <td>{idx+1}</td><td>{title}</td><td>{score}</td><td>{totalQ}</td>
-                                  <td><span className={passed?'quiz-percentage-passed':'quiz-percentage-failed'}>{pct}%</span></td>
+                                  <td>{idx + 1}</td><td>{title}</td><td>{score}</td><td>{totalQ}</td>
+                                  <td><span className={passed ? 'quiz-percentage-passed' : 'quiz-percentage-failed'}>{pct}%</span></td>
                                   <td>{attempts}</td>
-                                  <td><span className={passed?'badge-passed-status':'badge-failed-status'}>{passed?'Passed':'Failed'}</span></td>
+                                  <td><span className={passed ? 'badge-passed-status' : 'badge-failed-status'}>{passed ? 'Passed' : 'Failed'}</span></td>
                                   <td>{date}</td>
                                 </tr>
                               );
@@ -840,11 +832,11 @@ const Dashboard = () => {
                 </div>
                 <div className="course-header-interactive-row"><h2>{selectedCourse.title}</h2></div>
                 <div className="tabs-header-navigation-bar">
-                  <button className={`nav-tab-item-btn ${activeCourseTab==='students'?'tab-active':''}`} onClick={() => { setActiveCourseTab('students'); setSelectedAssignment(null); setSelectedQuiz(null); }}>Students</button>
-                  <button className={`nav-tab-item-btn ${activeCourseTab==='attendance'?'tab-active':''}`} onClick={() => { setActiveCourseTab('attendance'); setSelectedAssignment(null); setSelectedQuiz(null); }}>Attendance</button>
-                  <button className={`nav-tab-item-btn ${activeCourseTab==='assignments'?'tab-active':''}`} onClick={() => { setActiveCourseTab('assignments'); setSelectedAssignment(null); setSelectedQuiz(null); }}>Assignments</button>
-                  <button className={`nav-tab-item-btn ${activeCourseTab==='quizzes'?'tab-active':''}`} onClick={() => { setActiveCourseTab('quizzes'); setSelectedAssignment(null); setSelectedQuiz(null); }}>Quizzes</button>
-                  <button className={`nav-tab-item-btn ${activeCourseTab==='progress'?'tab-active':''}`} onClick={() => { setActiveCourseTab('progress'); setSelectedAssignment(null); setSelectedQuiz(null); }}>Course Progress</button>
+                  <button className={`nav-tab-item-btn ${activeCourseTab === 'students' ? 'tab-active' : ''}`} onClick={() => { setActiveCourseTab('students'); setSelectedAssignment(null); setSelectedQuiz(null); }}>Students</button>
+                  <button className={`nav-tab-item-btn ${activeCourseTab === 'attendance' ? 'tab-active' : ''}`} onClick={() => { setActiveCourseTab('attendance'); setSelectedAssignment(null); setSelectedQuiz(null); }}>Attendance</button>
+                  <button className={`nav-tab-item-btn ${activeCourseTab === 'assignments' ? 'tab-active' : ''}`} onClick={() => { setActiveCourseTab('assignments'); setSelectedAssignment(null); setSelectedQuiz(null); }}>Assignments</button>
+                  <button className={`nav-tab-item-btn ${activeCourseTab === 'quizzes' ? 'tab-active' : ''}`} onClick={() => { setActiveCourseTab('quizzes'); setSelectedAssignment(null); setSelectedQuiz(null); }}>Quizzes</button>
+                  <button className={`nav-tab-item-btn ${activeCourseTab === 'progress' ? 'tab-active' : ''}`} onClick={() => { setActiveCourseTab('progress'); setSelectedAssignment(null); setSelectedQuiz(null); }}>Course Progress</button>
                 </div>
 
                 <div className="tab-render-container">
@@ -863,19 +855,19 @@ const Dashboard = () => {
                               <td><div className="user-profile-table-cell"><img src={st.img} alt="" className="avatar-circle-sm" /><span>{st.name}</span></div></td>
                               <td>{st.code}</td><td>{st.email}</td>
                               <td><span className="badge-enrolled-status">{st.status}</span></td>
-                              <td><button className="eye-action-btn" onClick={() => { setSelectedStudent(st); setStudentTab('attendance'); }}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></td>
+                              <td><button className="eye-action-btn" onClick={() => { setSelectedStudent(st); setStudentTab('attendance'); }}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg></button></td>
                             </tr>
                           ))}
                         </tbody>
                       </table>
                       <div className="table-pagination-footer-row">
-                        <span className="muted-small-text">Showing {(studentsPage-1)*PAGE_SIZE+2}-{Math.min(studentsPage*PAGE_SIZE, TOTAL_STUDENT_RECORDS)} of {TOTAL_STUDENT_RECORDS} records</span>
+                        <span className="muted-small-text">Showing {(studentsPage - 1) * PAGE_SIZE + 2}-{Math.min(studentsPage * PAGE_SIZE, TOTAL_STUDENT_RECORDS)} of {TOTAL_STUDENT_RECORDS} records</span>
                         <div className="pagination-buttons-group">
-                          <button className="pagination-nav-btn" disabled={studentsPage===1} onClick={() => setStudentsPage(p => Math.max(1,p-1))}>Previous</button>
-                          {[1,2].map(p => <button key={p} className={`pagination-page-num ${studentsPage===p?'active-page':''}`} onClick={() => setStudentsPage(p)}>{p}</button>)}
+                          <button className="pagination-nav-btn" disabled={studentsPage === 1} onClick={() => setStudentsPage(p => Math.max(1, p - 1))}>Previous</button>
+                          {[1, 2].map(p => <button key={p} className={`pagination-page-num ${studentsPage === p ? 'active-page' : ''}`} onClick={() => setStudentsPage(p)}>{p}</button>)}
                           <span className="pagination-ellipsis">...</span>
-                          <button className={`pagination-page-num ${studentsPage===totalPages?'active-page':''}`} onClick={() => setStudentsPage(totalPages)}>{totalPages}</button>
-                          <button className="pagination-nav-btn" disabled={studentsPage===totalPages} onClick={() => setStudentsPage(p => Math.min(totalPages,p+1))}>Next</button>
+                          <button className={`pagination-page-num ${studentsPage === totalPages ? 'active-page' : ''}`} onClick={() => setStudentsPage(totalPages)}>{totalPages}</button>
+                          <button className="pagination-nav-btn" disabled={studentsPage === totalPages} onClick={() => setStudentsPage(p => Math.min(totalPages, p + 1))}>Next</button>
                         </div>
                       </div>
                     </div>
@@ -898,7 +890,7 @@ const Dashboard = () => {
                         <div className="attendance-for-date-heading">Attendance for {formatCourseAttendanceHeading(courseAttendanceDate)}</div>
                         <table className="client-data-table plain-table">
                           <thead><tr><th>Roll #</th><th>Full Name</th><th>Status</th></tr></thead>
-                          <tbody>{courseAttendanceByDate.map((row,index) => <tr key={index}><td>{row[0]}</td><td>{row[1]}</td><td><span className={row[2]==='PRESENT'?'badge-present-status':'badge-notmarked-status'}>{row[2]}</span></td></tr>)}</tbody>
+                          <tbody>{courseAttendanceByDate.map((row, index) => <tr key={index}><td>{row[0]}</td><td>{row[1]}</td><td><span className={row[2] === 'PRESENT' ? 'badge-present-status' : 'badge-notmarked-status'}>{row[2]}</span></td></tr>)}</tbody>
                         </table>
                       </div>
                     </div>
@@ -910,11 +902,11 @@ const Dashboard = () => {
                       <div className="tab-action-header-row">
                         <h3>Assignments</h3>
                         <button className="new-item-action-btn" onClick={() => alert('New Assignment form coming soon!')}>
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
                           New Assignment
                         </button>
                       </div>
-                      <div className="table-responsive-wrapper" style={{marginTop:'4px'}}>
+                      <div className="table-responsive-wrapper" style={{ marginTop: '4px' }}>
                         <table className="client-data-table">
                           <thead>
                             <tr>
@@ -940,12 +932,12 @@ const Dashboard = () => {
                                 <td className={asgn.isHackathon ? 'hackathon-date-text' : ''}>{asgn.dueDate}</td>
                                 <td>
                                   <button className="eye-action-btn" onClick={() => { setSelectedAssignment(asgn); setSelectedSubmission(asgn.submissions[0] || null); }}>
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
                                   </button>
                                 </td>
                                 <td>
                                   <button className="icon-edit-btn" title="Edit">
-                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>
                                   </button>
                                 </td>
                               </tr>
@@ -978,15 +970,15 @@ const Dashboard = () => {
                       <div className="submission-stats-row">
                         <div className="submission-stat-card">
                           <div><span className="sub-stat-num">{selectedAssignment.submissions.length}</span><p>Submissions</p></div>
-                          <div className="stat-badge-icon blue-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+                          <div className="stat-badge-icon blue-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /></svg></div>
                         </div>
                         <div className="submission-stat-card">
-                          <div><span className="sub-stat-num">{selectedAssignment.submissions.filter(s=>s.approved===true).length}</span><p>Approved</p></div>
-                          <div className="stat-badge-icon green-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2"><polyline points="20 6 9 17 4 12"/><circle cx="12" cy="12" r="10"/></svg></div>
+                          <div><span className="sub-stat-num">{selectedAssignment.submissions.filter(s => s.approved === true).length}</span><p>Approved</p></div>
+                          <div className="stat-badge-icon green-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2"><polyline points="20 6 9 17 4 12" /><circle cx="12" cy="12" r="10" /></svg></div>
                         </div>
                         <div className="submission-stat-card">
-                          <div><span className="sub-stat-num">{selectedAssignment.submissions.filter(s=>s.approved===false).length}</span><p>Not Approved</p></div>
-                          <div className="stat-badge-icon red-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/></svg></div>
+                          <div><span className="sub-stat-num">{selectedAssignment.submissions.filter(s => s.approved === false).length}</span><p>Not Approved</p></div>
+                          <div className="stat-badge-icon red-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2"><circle cx="12" cy="12" r="10" /><line x1="15" y1="9" x2="9" y2="15" /></svg></div>
                         </div>
                       </div>
 
@@ -999,16 +991,16 @@ const Dashboard = () => {
                             <input type="text" placeholder="Search..." className="submission-search-input" />
                           </div>
                           <div className="submission-list-items">
-                            {selectedAssignment.submissions.length === 0 && <p className="muted-italic-text" style={{padding:'16px'}}>No submissions yet.</p>}
+                            {selectedAssignment.submissions.length === 0 && <p className="muted-italic-text" style={{ padding: '16px' }}>No submissions yet.</p>}
                             {selectedAssignment.submissions.map((sub, idx) => {
                               const approval = getSubApproval(selectedAssignment.id, idx);
                               const isActive = selectedSubmission === sub;
                               return (
                                 <div key={idx} className={`submission-list-item ${isActive ? 'sub-item-active' : ''}`} onClick={() => setSelectedSubmission(sub)}>
-                                  <div className="sub-item-avatar-initials">{sub.name.split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase()}</div>
+                                  <div className="sub-item-avatar-initials">{sub.name.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase()}</div>
                                   <span className="sub-item-name">{sub.name}</span>
-                                  <span className={`sub-item-badge ${sub.status==='Late Submitted'?'sub-badge-late':approval===true?'sub-badge-approved':approval===false?'sub-badge-notapproved':'sub-badge-submitted'}`}>
-                                    {sub.status==='Late Submitted' ? '⏱ Late Submitted' : approval===true ? '✓ Approved' : approval===false ? '✗ Not Approved' : '✓ Submitted'}
+                                  <span className={`sub-item-badge ${sub.status === 'Late Submitted' ? 'sub-badge-late' : approval === true ? 'sub-badge-approved' : approval === false ? 'sub-badge-notapproved' : 'sub-badge-submitted'}`}>
+                                    {sub.status === 'Late Submitted' ? '⏱ Late Submitted' : approval === true ? '✓ Approved' : approval === false ? '✗ Not Approved' : '✓ Submitted'}
                                   </span>
                                 </div>
                               );
@@ -1030,11 +1022,11 @@ const Dashboard = () => {
                                   const approval = getSubApproval(selectedAssignment.id, subIdx);
                                   return (
                                     <>
-                                      <span className={`sub-status-pill ${approval===true?'sub-pill-approved':approval===false?'sub-pill-notapproved':'sub-pill-pending'}`}>
-                                        {approval===true?'✓ Approved':approval===false?'✗ Not Approved':'Pending'}
+                                      <span className={`sub-status-pill ${approval === true ? 'sub-pill-approved' : approval === false ? 'sub-pill-notapproved' : 'sub-pill-pending'}`}>
+                                        {approval === true ? '✓ Approved' : approval === false ? '✗ Not Approved' : 'Pending'}
                                       </span>
                                       <button className="feedback-btn">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>
                                         Feedback
                                       </button>
                                     </>
@@ -1052,10 +1044,10 @@ const Dashboard = () => {
                                   const approval = getSubApproval(selectedAssignment.id, subIdx);
                                   return (
                                     <>
-                                      <button className={`sub-toggle-btn ${approval===true?'sub-toggle-approved-active':''}`} onClick={() => setSubApproval(selectedAssignment.id, subIdx, true)}>Approved</button>
-                                      <button className={`sub-toggle-btn ${approval===false?'sub-toggle-notapproved-active':''}`} onClick={() => setSubApproval(selectedAssignment.id, subIdx, false)}>Not Approved</button>
+                                      <button className={`sub-toggle-btn ${approval === true ? 'sub-toggle-approved-active' : ''}`} onClick={() => setSubApproval(selectedAssignment.id, subIdx, true)}>Approved</button>
+                                      <button className={`sub-toggle-btn ${approval === false ? 'sub-toggle-notapproved-active' : ''}`} onClick={() => setSubApproval(selectedAssignment.id, subIdx, false)}>Not Approved</button>
                                       <button className="sub-delete-btn" title="Delete">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14H6L5 6" /><path d="M10 11v6M14 11v6" /><path d="M9 6V4h6v2" /></svg>
                                       </button>
                                     </>
                                   );
@@ -1067,7 +1059,7 @@ const Dashboard = () => {
                               <div className="submission-detail-row">
                                 <span className="sub-detail-label">Link</span>
                                 <a href={selectedSubmission.link} className="sub-detail-link" target="_blank" rel="noopener noreferrer">
-                                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /><polyline points="15 3 21 3 21 9" /><line x1="10" y1="14" x2="21" y2="3" /></svg>
                                   {selectedSubmission.link}
                                 </a>
                               </div>
@@ -1083,7 +1075,7 @@ const Dashboard = () => {
                             <div className="submission-detail-row">
                               <span className="sub-detail-label">Files</span>
                               <div className="sub-no-files-box">
-                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ccc" strokeWidth="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9l4-4 4 4 4-4 4 4"/></svg>
+                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ccc" strokeWidth="1.5"><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M3 9l4-4 4 4 4-4 4 4" /></svg>
                                 <p>No files found for this submission.</p>
                               </div>
                             </div>
@@ -1099,11 +1091,11 @@ const Dashboard = () => {
                       <div className="tab-action-header-row">
                         <h3>Quizzes</h3>
                         <button className="new-item-action-btn" onClick={() => alert('New Quiz form coming soon!')}>
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
                           New Quiz
                         </button>
                       </div>
-                      <div className="table-responsive-wrapper" style={{marginTop:'4px'}}>
+                      <div className="table-responsive-wrapper" style={{ marginTop: '4px' }}>
                         <table className="client-data-table">
                           <thead>
                             <tr><th>Quiz</th><th>Course(s)</th><th>Date</th><th>Expiry</th><th>Status</th><th>Action</th></tr>
@@ -1111,18 +1103,18 @@ const Dashboard = () => {
                           <tbody>
                             {courseQuizzesData.map((quiz) => (
                               <tr key={quiz.id}>
-                                <td style={{fontWeight:'600'}}>{quiz.title}</td>
+                                <td style={{ fontWeight: '600' }}>{quiz.title}</td>
                                 <td className="quiz-courses-cell">{quiz.courses}</td>
                                 <td>{quiz.date}</td>
                                 <td>{quiz.expiry}</td>
                                 <td><span className="badge-quiz-active">{quiz.status}</span></td>
                                 <td>
-                                  <div style={{display:'flex',gap:'8px',alignItems:'center'}}>
+                                  <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                                     <button className="icon-edit-btn" title="Edit">
-                                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>
                                     </button>
                                     <button className="eye-action-btn" title="View Results" onClick={() => setSelectedQuiz(quiz)}>
-                                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
                                     </button>
                                   </div>
                                 </td>
@@ -1148,19 +1140,19 @@ const Dashboard = () => {
                           </thead>
                           <tbody>
                             {selectedQuiz.results.length === 0 && (
-                              <tr><td colSpan="8" style={{textAlign:'center', padding:'30px', color:'var(--text-muted)'}}>No results yet for this quiz.</td></tr>
+                              <tr><td colSpan="8" style={{ textAlign: 'center', padding: '30px', color: 'var(--text-muted)' }}>No results yet for this quiz.</td></tr>
                             )}
                             {selectedQuiz.results.map((res, idx) => (
                               <tr key={idx}>
-                                <td style={{fontWeight:'600'}}>{res.name}</td>
-                                <td style={{color:'var(--text-muted)',fontSize:'13px'}}>{res.email}</td>
+                                <td style={{ fontWeight: '600' }}>{res.name}</td>
+                                <td style={{ color: 'var(--text-muted)', fontSize: '13px' }}>{res.email}</td>
                                 <td>{res.status === 'FAILED' ? <span className="badge-quiz-failed">{res.status}</span> : <span className="badge-quiz-passed">{res.status}</span>}</td>
-                                <td style={{fontWeight:'600'}}>{res.score}</td>
+                                <td style={{ fontWeight: '600' }}>{res.score}</td>
                                 <td>{res.attempts}</td>
-                                <td style={{color:'var(--text-muted)',fontSize:'12px'}}>{res.date}</td>
+                                <td style={{ color: 'var(--text-muted)', fontSize: '12px' }}>{res.date}</td>
                                 <td>
                                   <button className="sub-delete-btn" title="Delete">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14H6L5 6" /><path d="M10 11v6M14 11v6" /><path d="M9 6V4h6v2" /></svg>
                                   </button>
                                 </td>
                               </tr>
@@ -1193,7 +1185,7 @@ const Dashboard = () => {
                           <h3>Course Progress Overview</h3>
                         </div>
                         <button className="progress-compare-toggle-btn" onClick={() => setShowComparison(!showComparison)}>
-                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="14" y="14" width="7" height="7" /><rect x="3" y="14" width="7" height="7" /></svg>
                           {showComparison ? 'Only My Progress' : 'Show Comparison'}
                         </button>
                       </div>
@@ -1214,24 +1206,24 @@ const Dashboard = () => {
                             <span className="overall-progress-pct">{courseProgressData.mySlot.overall}%</span>
                           </div>
                           <div className="overall-progress-bar-blue">
-                            <div style={{width:`${courseProgressData.mySlot.overall}%`}}></div>
+                            <div style={{ width: `${courseProgressData.mySlot.overall}%` }}></div>
                           </div>
                           <div className="modules-list-new">
                             {courseProgressData.mySlot.modules.map((mod, idx) => (
                               <div key={idx} className="module-row-item">
                                 <div className="module-row-left">
                                   {mod.done
-                                    ? <span className="module-check-done"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/><circle cx="12" cy="12" r="10" stroke="#10b981" strokeWidth="2"/></svg></span>
-                                    : <span className="module-check-pending"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
+                                    ? <span className="module-check-done"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2.5"><polyline points="20 6 9 17 4 12" /><circle cx="12" cy="12" r="10" stroke="#10b981" strokeWidth="2" /></svg></span>
+                                    : <span className="module-check-pending"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" strokeWidth="2"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg></span>
                                   }
                                   <div>
                                     <p className="module-name">{mod.name}</p>
                                     <p className="module-topics-text">Topics: {mod.topicsDone}/{mod.topicsTotal}</p>
                                   </div>
                                 </div>
-                                <div style={{display:'flex',alignItems:'center',gap:'8px'}}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                                   <CircularProgress pct={mod.pct} />
-                                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#aaa" strokeWidth="2" style={{cursor:'pointer'}}><polyline points="6 9 12 15 18 9"/></svg>
+                                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#aaa" strokeWidth="2" style={{ cursor: 'pointer' }}><polyline points="6 9 12 15 18 9" /></svg>
                                 </div>
                               </div>
                             ))}
@@ -1247,14 +1239,14 @@ const Dashboard = () => {
                                 <div key={idx} className="other-slot-card">
                                   <div className="other-slot-header">
                                     <span className="other-slot-trainer">{slot.trainer}</span>
-                                    <span className="other-slot-pct-badge" style={{color: slot.pct >= 60 ? '#4f46e5' : '#f59e0b', background: slot.pct >= 60 ? '#eff2fe' : '#fffbeb'}}>{slot.pct}%</span>
+                                    <span className="other-slot-pct-badge" style={{ color: slot.pct >= 60 ? '#4f46e5' : '#f59e0b', background: slot.pct >= 60 ? '#eff2fe' : '#fffbeb' }}>{slot.pct}%</span>
                                   </div>
                                   <p className="muted-small-text">{slot.schedule}</p>
                                   <p className="other-slot-covered-label">Covered topics</p>
                                   <div className="other-slot-progress-bar">
-                                    <div style={{width:`${slot.pct}%`, background: slot.pct >= 60 ? '#4f46e5' : '#f59e0b'}}></div>
+                                    <div style={{ width: `${slot.pct}%`, background: slot.pct >= 60 ? '#4f46e5' : '#f59e0b' }}></div>
                                   </div>
-                                  <p className="muted-small-text" style={{marginTop:'4px'}}>{slot.topicsDone}/{slot.topicsTotal}</p>
+                                  <p className="muted-small-text" style={{ marginTop: '4px' }}>{slot.topicsDone}/{slot.topicsTotal}</p>
                                 </div>
                               ))}
                             </div>

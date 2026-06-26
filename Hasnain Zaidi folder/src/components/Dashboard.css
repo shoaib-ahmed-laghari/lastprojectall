@@ -118,7 +118,7 @@ body {
 .stat-content h3 { margin: 0; font-size: 26px; font-weight: 700; }
 .stat-content p { margin: 4px 0 0 0; color: var(--text-muted); font-size: 13px; }
 .stat-badge-icon { width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; border-radius: 50%; flex-shrink: 0; }
-.green-icon { background: #f0fdf4; }
+.green-icon { background: #eff6ff; }
 .blue-icon { background: #eff6ff; }
 .purple-icon { background: #faf5ff; }
 .red-icon { background: #fef2f2; }
@@ -128,8 +128,8 @@ body {
 .schedule-title-row { font-size: 13px; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; }
 .schedule-days-flex { display: flex; gap: 4px; justify-content: space-between; overflow-x: auto; }
 .day-pill { display: flex; flex-direction: column; align-items: center; font-size: 11px; padding: 6px; border-radius: 4px; background: #f9f9f9; min-width: 32px; flex-grow: 1; }
-.day-pill.current { background: #10b981; color: white; font-weight: 700; }
-.day-pill.present { background: #e6fdf4; color: #10b981; }
+.day-pill.current { background: #1e40af; color: white; font-weight: 700; }
+.day-pill.present { background: #e0ecff; color: #1e40af; }
 .day-pill span { font-weight: 700; margin-top: 2px; }
 
 .section-title-bar h3 { margin: 0 0 16px 0; font-size: 16px; font-weight: 700; }
@@ -156,7 +156,7 @@ body {
 .card-body-content { padding: 16px; display: flex; flex-direction: column; gap: 12px; }
 .location-text { margin: 0; font-size: 13px; color: var(--text-muted); }
 .progress-bar-rail { height: 6px; background-color: #eee; border-radius: 3px; overflow: hidden; margin-top: 4px; }
-.progress-bar-fill-track { height: 100%; }
+.progress-bar-fill-track { height: 100%; background-color: #1e40af; border-radius: 3px; }
 .flex-space-between { display: flex; justify-content: space-between; align-items: center; }
 .text-small { font-size: 12px; color: var(--text-muted); }
 .meta-footer-info { border-top: 1px solid #f5f5f5; padding-top: 12px; font-size: 12px; color: var(--text-muted); display: flex; flex-direction: column; gap: 4px; }
@@ -221,9 +221,9 @@ body {
 .sub-item-name { font-size: 13px; font-weight: 600; flex-grow: 1; }
 .sub-item-badge { font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 10px; white-space: nowrap; }
 .sub-badge-late { background: #fff7ed; color: #c2410c; border: 1px solid #fed7aa; }
-.sub-badge-approved { background: #e6fdf4; color: #10b981; }
+.sub-badge-approved { background: #e0ecff; color: #1e40af; }
 .sub-badge-notapproved { background: #fef2f2; color: #dc2626; }
-.sub-badge-submitted { background: #f0fdf4; color: #16a34a; }
+.sub-badge-submitted { background: #eff6ff; color: #1e40af; }
 
 .submission-detail-panel { border: 1px solid var(--border-color); border-radius: var(--radius-md); background: #fff; padding: 24px; display: flex; flex-direction: column; gap: 20px; }
 .submission-detail-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px; }
@@ -240,7 +240,7 @@ body {
 .sub-detail-label { font-size: 13px; font-weight: 700; color: var(--text-dark); }
 .sub-approval-toggle { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .sub-toggle-btn { background: #fff; border: 1px solid #ddd; padding: 7px 16px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 600; cursor: pointer; }
-.sub-toggle-approved-active { background: #e6fdf4; color: #10b981; border-color: #10b981; }
+.sub-toggle-approved-active { background: #e0ecff; color: #1e40af; border-color: #1e40af; }
 .sub-toggle-notapproved-active { background: #fef2f2; color: #dc2626; border-color: #dc2626; }
 .sub-delete-btn { background: none; border: none; cursor: pointer; color: #dc2626; padding: 6px; border-radius: 4px; display: flex; align-items: center; }
 .sub-delete-btn:hover { background: #fef2f2; }
@@ -252,9 +252,9 @@ body {
 
 /* ================= QUIZZES ================= */
 .quiz-courses-cell { font-size: 12px; color: var(--text-muted); max-width: 280px; }
-.badge-quiz-active { background: #e6fdf4; color: #10b981; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 4px; }
+.badge-quiz-active { background: #e0ecff; color: #1e40af; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 4px; }
 .badge-quiz-failed { background: #fef2f2; color: #dc2626; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 4px; }
-.badge-quiz-passed { background: #e6fdf4; color: #10b981; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 4px; }
+.badge-quiz-passed { background: #e0ecff; color: #1e40af; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 4px; }
 
 /* ================= PAGINATION ================= */
 .table-pagination-footer-row { display: flex; justify-content: space-between; align-items: center; padding: 14px; flex-wrap: wrap; gap: 10px; }
@@ -271,14 +271,14 @@ body {
 .summary-pill-card h5 { margin: 0; font-size: 20px; font-weight: 700; }
 .summary-pill-card p { margin: 2px 0 0 0; font-size: 12px; color: var(--text-muted); }
 .gray-theme-box { background: #f8fafc; }
-.green-theme-box { background: #f0fdf4; color: #16a34a; }
+.green-theme-box { background: #eff6ff; color: #1e40af; }
 .red-theme-box { background: #fef2f2; color: #dc2626; }
-.badge-present-status { background: #e6fdf4; color: #10b981; padding: 4px 8px; font-size: 11px; font-weight: 700; border-radius: 4px; }
+.badge-present-status { background: #e0ecff; color: #1e40af; padding: 4px 8px; font-size: 11px; font-weight: 700; border-radius: 4px; }
 .badge-notmarked-status { background: #f5f5f5; color: #666; padding: 4px 8px; font-size: 11px; font-weight: 700; border-radius: 4px; }
-.badge-approved-status { background: #e6fdf4; color: #10b981; padding: 4px 8px; font-size: 11px; font-weight: 700; border-radius: 4px; }
+.badge-approved-status { background: #e0ecff; color: #1e40af; padding: 4px 8px; font-size: 11px; font-weight: 700; border-radius: 4px; }
 .badge-notsubmitted-status { background: #f5f5f5; color: #999; padding: 4px 8px; font-size: 11px; font-weight: 700; border-radius: 4px; }
 .badge-notapproved-status { background: #fef2f2; color: #dc2626; padding: 4px 8px; font-size: 11px; font-weight: 700; border-radius: 4px; }
-.badge-passed-status { background: #e6fdf4; color: #10b981; padding: 4px 10px; font-size: 11px; font-weight: 700; border-radius: 12px; }
+.badge-passed-status { background: #e0ecff; color: #1e40af; padding: 4px 10px; font-size: 11px; font-weight: 700; border-radius: 12px; }
 .badge-failed-status { background: #fef2f2; color: #dc2626; padding: 4px 10px; font-size: 11px; font-weight: 700; border-radius: 12px; }
 .plain-table { min-width: 450px; }
 
@@ -286,7 +286,7 @@ body {
 .overall-progress-bar-track-container { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 12px; font-weight: 600; }
 .modules-accordion-list { display: flex; flex-direction: column; gap: 10px; }
 .accordion-item-row { display: flex; justify-content: space-between; padding: 14px; border: 1px solid var(--border-color); border-radius: var(--radius-sm); font-size: 13px; font-weight: 600; }
-.accordion-item-row.accomplished { border-left: 4px solid #10b981; background: #fafdfb; }
+.accordion-item-row.accomplished { border-left: 4px solid #1e40af; background: #f8faff; }
 .accordion-item-row.active-prog { border-left: 4px solid #3b82f6; background: #fafbfe; }
 
 .animated-fade { animation: fadeIn 0.15s ease-out; }
@@ -296,7 +296,6 @@ body {
 /* ================= PROFILE PAGE ================= */
 .profile-page-wrapper h1 { margin: 0; font-size: 22px; font-weight: 700; }
 
-/* Profile cover banner - now uses background image with overlay */
 .profile-cover-banner {
   height: 160px;
   border-radius: var(--radius-md);
@@ -311,7 +310,6 @@ body {
   border-radius: var(--radius-md);
 }
 
-/* Avatar wrapper for click-to-upload */
 .profile-cover-avatar-wrap {
   position: absolute;
   left: 24px;
@@ -384,9 +382,9 @@ body {
 .cal-day-cell.cal-today { background: #f0f4ff; }
 .cal-day-number-row { display: flex; align-items: center; justify-content: space-between; font-weight: 700; margin-bottom: 4px; }
 .cal-today .cal-day-number-row span:first-child { background: #111; color: #fff; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; }
-.cal-day-dot { width: 6px; height: 6px; border-radius: 50%; background: #10b981; }
+.cal-day-dot { width: 6px; height: 6px; border-radius: 50%; background: #1e40af; }
 .cal-events-stack { display: flex; flex-direction: column; gap: 3px; }
-.cal-event-pill { font-size: 9px; font-weight: 700; color: #166534; padding: 3px 5px; border-radius: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cal-event-pill { font-size: 9px; font-weight: 700; color: #1e3a8a; padding: 3px 5px; border-radius: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 /* ================= ATTENDANCE PAGE ================= */
 .attendance-top-header-row { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 14px; margin-bottom: 20px; }
@@ -422,14 +420,13 @@ body {
 .date-range-arrow { color: var(--text-muted); padding-bottom: 8px; }
 .no-records-found-state { padding: 30px 0; text-align: center; color: var(--text-muted); font-size: 13px; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); }
 
-/* Student detail attendance */
 .student-stats-row { margin-bottom: 20px; }
 .attendance-overview-card { background: #ffffff; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 18px; margin-bottom: 20px; }
 .attendance-overview-card h3 { margin: 0 0 14px 0; font-size: 15px; font-weight: 700; }
 .overview-progress-rail { height: 8px; background: #eee; border-radius: 4px; overflow: hidden; }
-.overview-progress-fill { height: 100%; background: #ef4444; }
+.overview-progress-fill { height: 100%; background: #1e40af; }
 .attendance-warning-text { color: #d97706; font-size: 12px; margin: 10px 0 0 0; font-weight: 600; }
-.attendance-good-text { color: #16a34a; font-size: 12px; margin: 10px 0 0 0; font-weight: 600; }
+.attendance-good-text { color: #1e40af; font-size: 12px; margin: 10px 0 0 0; font-weight: 600; }
 .attendance-month-table-card { background: #ffffff; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 18px; }
 .attendance-month-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 10px; }
 .attendance-month-header-row h3 { margin: 0; font-size: 15px; font-weight: 700; }
@@ -443,7 +440,7 @@ body {
 /* ================= QUIZ RESULTS ================= */
 .quiz-results-card-frame { background: #ffffff; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 20px; }
 .quiz-results-card-frame h3 { margin: 0 0 16px 0; font-size: 16px; font-weight: 700; }
-.quiz-percentage-passed { color: #16a34a; font-weight: 700; }
+.quiz-percentage-passed { color: #1e40af; font-weight: 700; }
 .quiz-percentage-failed { color: #dc2626; font-weight: 700; }
 .feedback-text-cell { color: var(--text-muted); font-size: 13px; }
 
@@ -466,9 +463,9 @@ body {
 .topics-count-badge { background: #eff2fe; color: #4f46e5; font-size: 12px; font-weight: 700; padding: 4px 12px; border-radius: 4px; white-space: nowrap; }
 
 .overall-progress-label-row { display: flex; justify-content: space-between; align-items: center; font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; }
-.overall-progress-pct { font-weight: 700; color: #4f46e5; font-size: 14px; }
+.overall-progress-pct { font-weight: 700; color: #1e40af; font-size: 14px; }
 .overall-progress-bar-blue { height: 10px; background: #e5e7eb; border-radius: 5px; overflow: hidden; margin-bottom: 20px; }
-.overall-progress-bar-blue div { height: 100%; background: #4f46e5; border-radius: 5px; }
+.overall-progress-bar-blue div { height: 100%; background: #1e40af; border-radius: 5px; }
 
 .modules-list-new { display: flex; flex-direction: column; gap: 10px; }
 .module-row-item { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; border: 1px solid var(--border-color); border-radius: var(--radius-sm); background: #fafafa; }
